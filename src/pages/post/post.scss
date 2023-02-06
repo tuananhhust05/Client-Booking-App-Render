@@ -1,0 +1,492 @@
+
+.list_post_container{
+    margin:20px 100px;
+}
+.option_post{
+    display:flex;
+    color:rgba(46, 76, 253, 1);
+    font-size:15px;
+    font-weight:700;
+    .options{
+        margin: 15px 120px;
+        margin-right:15px;
+        height: 50px;
+        width: 100px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        top: 0px;
+        position: relative;
+        &:hover{
+            transition: all ease 0.3s;
+            scale: 1.05;
+        }
+    };
+    
+    .createPost_btn {
+        height: 50px;
+        width: 100px;
+        margin-top:15px;
+        border:0px;
+        font-size: 15px;
+        color:white;
+        font-weight: 600;
+        background-color:rgba(46, 76, 253, 0.8);
+        cursor: pointer;
+        border-radius: 10px;
+        top: 0px;
+        position: relative;
+        .text{
+            padding:0px;
+            margin:0px;
+        }
+        &:hover{
+            transition: all ease 0.3s;
+            scale: 1.05;
+            background-color:rgba(46, 76, 253, 0.1);
+            color:rgba(46, 76, 253, 0.8);
+            .text{
+                transition: all ease 0.3s;
+                transform:rotate(360deg);
+            }
+        }
+    }
+}
+.loading_icon_wrapper{
+    position:relative;
+    width:100%;
+    height:100px;
+   .loading_icon{
+        animation: RotateLoadingIconFeature 0.1s infinite;
+        position:absolute;
+        left:48%;
+        top:10%;
+        color: rgba(0, 0, 255, 0.6);
+        box-shadow: -4px 4px 50px 12px rgba(0, 0, 255, 0.4) ;
+      }
+  }
+.post_title_form{
+    flex-direction: column;
+    background-color: white;
+    position:fixed;
+    opacity:1;
+    width:70%;
+    padding:15px;
+    height:30%;
+    z-index:13;
+    left:15%;
+    top:30%;
+    border-radius: 5px;
+    .input_title{
+        width:100%;
+        height:50px;
+    }
+    .typed_title_post{
+        color:white;
+        background-color:rgba(46, 76, 253, 0.8);
+        border-radius:5px;
+        cursor:pointer;
+        border:none;
+        margin:5px;
+        padding:10px;
+        text-align: center;
+        &:hover{
+            transition:all 0.3s;
+            transform:scale(1.1)
+        }
+    }
+}
+.recommed_form{
+    flex-direction: column;
+    background-color: white;
+    position:fixed;
+    opacity:1;
+    width:70%;
+    padding:15px;
+    height:30%;
+    z-index:13;
+    left:15%;
+    top:30%;
+    border-radius: 5px;
+    .input_recommed{
+        width:100%;
+        height:50px;
+    }
+    .typed_recommend_post{
+        color:white;
+        background-color:rgba(46, 76, 253, 0.8);
+        border-radius:5px;
+        cursor:pointer;
+        border:none;
+        margin:5px;
+        padding:10px;
+        text-align: center;
+        &:hover{
+            transition:all 0.3s;
+            transform:scale(1.1)
+        }
+    }
+    .decription_type_recommend{
+        font-size: 10px;
+        color:rgba(46, 76, 253, 1);
+        margin:5px;
+        text-align: left;
+        width:90%;
+    }
+}
+.raw_seen_post_create{
+    flex-direction: column;
+    background-color: white;
+    position:fixed;
+    opacity:1;
+    width:70%;
+    padding:15px;
+    height:18%;
+    z-index:13;
+    left:15%;
+    top:30%;
+    border-radius: 5px;
+    #raw{
+        width:90%;
+    }
+}
+.emotion_author_form{
+    flex-direction: column;
+    background-color: white;
+    position:fixed;
+    opacity:1;
+    width:70%;
+    padding:15px;
+    height:18%;
+    z-index:13;
+    left:15%;
+    top:30%;
+    border-radius: 5px;
+    .emotion{
+        margin:5px;
+        width:90%;
+    }
+}
+.list_tag_form{
+    flex-direction: column;
+    background-color: white;
+    position:fixed;
+    opacity:1;
+    width:70%;
+    padding:15px;
+    height:55%;
+    z-index:13;
+    left:15%;
+    top:30%;
+    border-radius: 5px;
+    .input_find_user_tag{
+        margin:5px;
+        width:90%;
+    }
+    .list_user_finded{
+        margin:5px;
+        width:90%;
+        display:block;
+        .user_tag_ele{
+            display:flex;
+            width:90%;
+            padding:3px;
+            cursor:pointer;
+            .user_tag_ele_img{
+                width:30px;
+                height:30px;
+                border-radius:50%;
+                padding:5px;
+                &:hover{
+                    transition:all 0.3s;
+                    transform:scale(1.05);
+                }
+            }
+            .user_tag_name{
+                padding:5px;
+            }
+        }
+    }
+    .list_User_tag_choose{
+        width:90%;
+        display:flex;
+        flex-wrap:wrap;
+        margin:8px;
+        .img_tag_choose_wrapper{
+            width:50px;
+            height:50px;
+            position:relative;
+            margin:5px;
+            .img_tag_choose{
+                padding:5px;
+                width:50px;
+                height:50px;
+                position:relative;
+                border-radius: 50%;
+            }
+            .img_tag_choose_close{
+                position:absolute;
+                right:-11px;
+                top:0px;
+                width:15px;
+                height:15px;
+                background-color:rgba(0, 2, 255, 0.6);
+                border-radius: 50%;
+                color:white;
+                cursor:pointer;
+                .img_tag_choose_close_icon{
+                    width:13px;
+                    height:13px;
+                    margin-left: 0.9px;
+                    margin-bottom: 3px;
+                }
+                &:hover{
+                    transition:all 0.3s;
+                    transform:rotate(360deg);
+                }
+            }
+        }
+    }
+}
+.form_create_post_wrapper{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    position:fixed;
+    opacity:1;
+    width:80%;
+    padding:15px;
+    height:80%;
+    z-index:10;
+    left:10%;
+    top:10%;
+    border-radius: 5px;
+    .form_create_post{
+        position:relative;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        .list_input{
+            position:relative;
+            padding:25px;
+            overflow-y: auto;
+            height: 200px;
+            .input_text{
+                width:100%;
+                height:120px;
+                border-radius: 5px;
+                padding:5px;
+                display:flex;
+                position:relative;
+                margin:5px;
+                padding:5px;
+            }
+        }
+        .list_image_post{
+            position:relative;
+            padding:25px;
+            overflow-y: auto;
+            height: 200px;
+            .img_ele_post{
+                width:100%;
+                height:150px;
+                border-radius: 5px;
+                padding:5px;
+                display:flex;
+                position:relative;
+                margin:5px;
+                padding:5px;
+                img{
+                    width:50%;
+                    height:100%;
+                }
+                .close_icon_wrapper{
+                    width:25px;
+                    height:25px;
+                    border-radius: 50%;
+                    background-color: rgba(0, 68, 255, 0.5);
+                    padding:5px;
+                    position:absolute;
+                    right:0px;
+                    top:0px;
+                    color:white;
+                    cursor:pointer;
+                    &:hover{
+                        .close_icon{
+                            transition:all 0.3s;
+                            transform: rotate(360deg)
+                        }
+                    }
+                }
+            }
+        }
+        .option_create_wrapper{
+            justify-content:center;
+            display:flex;
+            flex-direction: column;
+            position:relative;
+            .Post_btn{
+                color:white;
+                background-color:rgba(46, 76, 253, 0.8);
+                border-radius:5px;
+                cursor:pointer;
+                border:none;
+                height:50px;
+                .text{
+                    padding:0px;
+                    margin:0px;
+                }
+                &:hover{
+                    transition:all 0.3s;
+                    transform:scale(1.1);
+                    background-color:rgba(46, 76, 253, 0.1);
+                    color:rgba(46, 76, 253, 0.8);
+                    .text{
+                        transition: all ease 0.2s;
+                        transform:rotate(360deg);
+                    }
+                }
+            }
+            .option_create{
+                justify-content:center;
+                display:flex;
+                .add_input{
+                    text-align: center;
+                    cursor:pointer;
+                    margin:5px;
+                    height:50px;
+                    position:relative;
+                    .decription_btn{
+                        position:absolute;
+                        background-color: rgba(0, 2, 255, 0.6);
+                        color:white;
+                        bottom:0px;
+                        right:0px;
+                        border-radius:10px;
+                        padding:3px;
+                        font-size:9px;
+                        display:none;
+                    }
+                    &:hover{
+                        transition:all 0.3s;
+                        transform:scale(1.1);
+                        .decription_btn{
+                            display:block;
+                        }
+                    };
+                }
+                .upload_file{
+                    text-align: center;
+                    cursor:pointer;
+                    margin:5px;
+                    height:50px;
+                    position:relative;
+                    .decription_btn{
+                        position:absolute;
+                        background-color: rgba(0, 2, 255, 0.6);
+                        color:white;
+                        bottom:0px;
+                        right:0px;
+                        border-radius:10px;
+                        padding:3px;
+                        font-size:9px;
+                        display:none;
+                    }
+                    &:hover{
+                        transition:all 0.3s;
+                        transform:scale(1.1);
+                        .decription_btn{
+                            display:block;
+                        }
+                    };
+                }
+                .title_post{
+                    text-align: center;
+                    cursor:pointer;
+                    margin:5px;
+                    height:50px;
+                    position:relative;
+                    .decription_btn{
+                        position:absolute;
+                        background-color: rgba(0, 2, 255, 0.6);
+                        color:white;
+                        bottom:0px;
+                        right:0px;
+                        border-radius:10px;
+                        padding:3px;
+                        font-size:9px;
+                        display:none;
+                    }
+                    &:hover{
+                        transition:all 0.3s;
+                        transform:scale(1.1);
+                        .decription_btn{
+                            display:block;
+                        }
+                    };
+                }
+                .hotel_recommend_btn,
+                .site_recommend_btn,
+                .tag_people_btn,
+                .permission_seen_btn,
+                .emotion_author_btn,
+                .city_recommend_btn{
+                    text-align: center;
+                    cursor:pointer;
+                    margin:5px;
+                    height:50px;
+                    position:relative;
+                    .decription_btn{
+                        position:absolute;
+                        background-color: rgba(0, 2, 255, 0.6);
+                        color:white;
+                        bottom:0px;
+                        right:0px;
+                        border-radius:10px;
+                        padding:3px;
+                        font-size:9px;
+                        display:none;
+                    }
+                    &:hover{
+                        transition:all 0.3s;
+                        transform:scale(1.1);
+                        .decription_btn{
+                            display:block;
+                        }
+                    };
+                }
+            }
+        }
+    }
+}
+
+.background_blur{
+    background-color: #555;
+    opacity:0.1;
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:9;
+    left:0;
+    top:0;
+  }
+.background_blur2{
+    background-color: #555;
+    opacity:0.1;
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:12;
+    left:0;
+    top:0;
+}
+
+@media (max-width: 875px) {
+    .list_post_container{
+        margin-left:10px;
+        margin-right:25px
+    }
+  }
+@keyframes RotateLoadingIconFeature{  
+  50%{transform:rotate(360deg)};
+}

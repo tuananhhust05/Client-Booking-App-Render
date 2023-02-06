@@ -1,0 +1,47 @@
+.hotelRecommend{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    max-width: 1024px;
+    justify-content: space-between;
+    .hotelRecommend_ele_wrapper{
+        width:23%;
+        &:hover{
+            cursor:pointer;
+            .hotelRecommend_ele{
+                .hotelRecommend_ele_name{
+                    transition:all 0.3s;
+                    transform:rotate(360deg);
+                    margin: 20px;
+                    font-weight: 800 ;
+                }
+            }
+        }
+        .hotelRecommend_ele{
+            width:100%;
+            position:relative;
+            .hotelRecommend_ele_name{
+                color:white;
+                font-size:20px;
+                position:absolute;
+                left:0px;
+                bottom:0px;
+                margin: 10px;
+                font-weight: 600 ;
+                &:hover{
+                    transition:all 0.3s;
+                    transform:scale(1.05)
+                }
+            }
+            .hotelRecommend_ele_img{
+                width:100%;
+                border-radius: 10px;
+                height:150px;
+                animation: ScaleImgFeature 3s infinite;
+            }
+        }
+    }
+}
+@keyframes ScaleImgFeature{  
+    50%{transform:scale(1.03)};
+  }

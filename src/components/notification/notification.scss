@@ -1,0 +1,36 @@
+.notification{
+    position:fixed;
+    z-index:100;
+    border-radius: 5px;
+    background-color: rgba(46, 138, 255, 0.4);
+    margin:10px;
+    padding:5px;
+    left:25%;
+    right:25%;
+    top:5%;
+    cursor:pointer;
+    display:flex;
+    &:hover{
+        transition:all 0.3s;
+        transform:scale(1.05);
+        .text{
+           transition:all 0.3s;
+           transform:rotate(360deg);
+        }
+    }
+    .text{
+        color:white;
+        margin:10px;
+        font-weight:800;
+    }
+    .icon{
+        color:rgba(0, 0, 255, 0.6);
+        margin:10px;
+        .icon_ele{
+            color:white;
+            font-weight:800;
+            width:23px;
+            height:23px
+        }
+    }
+}

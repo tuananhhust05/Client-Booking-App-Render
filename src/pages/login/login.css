@@ -1,0 +1,60 @@
+.login {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position:relative;
+  }
+  
+  .lContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 40%;
+    opacity:0.8;
+  }
+  
+  .lInput{
+    height: 30px;
+    padding: 10px;
+    opacity:0.8;
+  }
+  
+  .lButton {
+    border: none;
+    padding: 10px 20px;
+    background-color: #0071c2;
+    opacity:0.8;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .lInput:hover{
+    transition:all 0.3s;
+    opacity:1;
+    transform:scale(1.05);
+  }
+  .lButton:hover{
+    transition:all 0.3s;
+    opacity:1;
+    transform:scale(1.05);
+  }
+  .lButton:disabled{
+    background-color: #0071c28c;
+    opacity:0.8;
+    cursor: not-allowed;
+  }
+
+.img_background_login{
+  position:absolute;
+  width:100%;
+  height:100%;
+  z-index:-1;
+  animation: ScaleImgLogin 5s infinite;
+}
+
+@keyframes ScaleImgLogin{  
+  50%{transform:scale(1.1)};
+}

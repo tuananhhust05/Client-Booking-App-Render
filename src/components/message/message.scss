@@ -1,0 +1,79 @@
+.message{
+    display:block;
+    position:relative;
+    width:40%;
+    margin:8px;
+    .sender_infor{
+        display:flex;
+        .img_sender{
+            img{
+                width:30px;
+                height:30px;
+                border-radius: 100%;
+                cursor:pointer;
+                &:hover{
+                    transition:all 0.3s;
+                    transform:scale(1.1)
+                }
+            }
+        }
+        .sender_name{
+            color:black;
+            margin: 0px 5px;
+            font-size:12px
+        }
+        .time_send_mess{
+            color:black;
+            margin: 0px 5px;
+            font-size:12px
+        }
+    };
+    .message_content{
+        padding:10px;
+        color:black;
+        font-size: 13px;
+        font-weight: 600;
+        cursor:pointer;
+        background-color:rgba(46, 138, 233, 0.4);
+        width:80%;
+        left:40px;
+        top:15px;
+        border-radius: 5px;
+    }
+    .option_setting_message{
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 10px;
+        background-color: white;
+        width: 200px;
+        z-index: 10;
+        .delete_message{
+            text-align: center;
+            padding: 10px;
+            margin: 5px;
+            color:red;
+            cursor:pointer;
+            &:hover{
+                transition:all ease 0.3s;
+                transform:scale(1.1);
+            }
+        }
+    }
+}
+.message_blur{
+    width:100%;
+    top:0%;
+    left:0%;
+    height:100%;
+    position:fixed;
+    background-color: black;
+    opacity: 0.1;
+    z-index:2;
+}
+.right{
+    margin-left: 55%;
+}

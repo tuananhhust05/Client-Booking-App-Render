@@ -1,0 +1,50 @@
+.conversation_ele{
+    position:relative;
+    &:hover{
+      transition:all 0.3s;
+      transform:scale(1.1);
+      border-radius:7px;
+      background-color:rgba(46, 138, 222, 0.2)
+    }
+    .conv_user_infor{
+        display:flex;
+    }
+  }
+.conv_user_infor_name{
+    color:black;
+    cursor:pointer;
+}
+.infor_mess_conv{
+    position:absolute;
+    color:black;
+    top:30px;
+    left:90px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:600
+    }
+.conv_user_infor_img{
+    width: 40px !important;
+    height:40px !important;
+    border-radius:50%;
+    margin:10px;
+    cursor:pointer;
+    &:hover{
+        transition:all 0.3s;
+        transform:scale(1.1)
+    }
+};
+.time_last_mess{
+    position:absolute;
+    right:0px;
+    top:5px;
+    font-size:15px;
+    font-weight: 500;
+    color:black
+}
+
+@media (max-width: 420px) {
+    .time_last_mess{
+        font-size:10px;
+    }
+  }

@@ -1,0 +1,247 @@
+
+
+@keyframes filling {
+    from{
+      background-position: center 25%;
+    }
+    to {
+      background-position: center 50%;
+    }
+}
+
+
+.commentEle{
+    display:block;
+    width: 90%;
+    min-height:150px;
+    position:relative;
+    .option_setting_comment{
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 10px;
+        background-color: white;
+        width: 200px;
+        z-index: 10;
+        .edit_comment{
+            border-bottom: 1px solid rgba(46, 138, 197, 0.8);
+            text-align: center;
+            padding: 10px;
+            margin: 5px;
+            cursor:pointer;
+            &:hover{
+                margin: 15px;
+                transition:all ease 0.3s;
+                transform:scale(1.1);
+            }
+        };
+        .delete_comment{
+            text-align: center;
+            padding: 10px;
+            margin: 5px;
+            color:red;
+            cursor:pointer;
+            &:hover{
+                transition:all ease 0.3s;
+                transform:scale(1.1);
+            }
+        }
+    }
+    .header_commentEle{
+        cursor:pointer;
+        width:30%;
+        // hover 
+        .header_commentEle_child{
+            display:flex;
+            cursor:pointer;
+            position:relative;
+            padding:10px 10px;
+            width:100px;
+            background:white;
+            font-size:28px;
+            border-top-right-radius:10px;
+            border-bottom-left-radius:10px;
+            transition:all 1s;
+            .img_commentEle{
+                width:30px;
+                height:30px;
+                border-radius:30px;
+                margin:10px
+            }
+            .name {
+                background-image:  url(https://static.pexels.com/photos/4827/nature-forest-trees-fog.jpeg);
+                -webkit-text-fill-color: transparent;
+                -webkit-background-clip: text;
+                color:  #FFFFFF;
+                padding-top: 15px;
+                font-size: 15px;
+                font-family: 'Bungee', cursive;
+                animation: filling 3s ease forwards;
+            }
+            &:after,&:before{
+                content:" ";
+                width:10px;
+                height:10px;
+                position:absolute;
+                border :0px solid #fff;
+                transition:all 1s;
+                }
+            &:after{
+                top:-1px;
+                left:-1px;
+                border-top:5px solid rgba(13, 43, 247, 0.7);
+                border-left:5px solid rgba(13, 43, 247, 0.7);
+            }
+            &:hover{
+                border-top-right-radius:0px;
+                border-bottom-left-radius:0px;
+              
+                &:before,&:after{         
+                    width:70%;
+                    height:70%;
+                }
+            }
+            }
+    }
+
+    .content_commentEle_wrapper{
+        display:flex;
+        padding:15px;
+        margin:5px;
+        background-color: rgba(46, 184, 224, 0.1);
+        border-radius: 5px;
+        position:relative;
+        &:hover{
+            transition:all ease 0.3s;
+            scale:1.01;
+            cursor:pointer;
+        }
+        .reaction_commentEle_wrapper{
+            position:absolute;
+            top:-18px;
+            right:3px;
+            display:flex;
+            .icon_comment{
+               color:rgba(46, 68, 229, 0.7);
+               &:hover{
+                 box-shadow: 0px 0px 3px rgba(46, 68, 229, 0.7);
+                 border-radius:100%;
+               }
+            }
+            &:hover{
+                transition: all ease 0.3s;
+                transform:scale(1.05);
+                .see_list_user_like{
+                    display:block
+                }
+            };
+            .see_list_user_like{
+                display:none;
+                background-color: white;
+                position: absolute;
+                right: -38px;
+                border-radius: 5px;
+                box-shadow: 2px 2px rgba(46, 184, 224, 0.1);
+                top: 0px;
+                &:hover{
+                    opacity:1.2;
+                }
+            }
+        }
+        .content_commentEle{
+           margin-bottom:10px;
+           margin-left:5px;
+           margin-right:5px;
+        }
+        .time{
+            position:absolute;
+            bottom:8px;
+            right:8px;
+            font-size:15px;
+            opacity:0.7;
+            display:block;
+            cursor:pointer;
+            .hours{
+                position:relative;
+                .day{
+                    position:absolute;
+                    bottom:-10px;
+                    font-size: 10px;
+                    min-width: 200px;
+                    display:none;
+                }
+                &:hover{
+                    .day{
+                        display:block
+                    }
+                }
+            }
+        }
+    };
+    .listUserLike_wrapper{
+        .listUserLike{
+            background-color: white;
+            border-radius: 4px;
+            position:fixed;
+            width:300px;
+            min-height:300px;
+            left:40%;
+            top:30%;
+            z-index:3;
+            padding:15px;
+            .user_data_ele_liked{
+               display:flex;
+               background-color: rgba(46, 162, 238, 0.4);
+               border-radius:3px;
+               .user_data_ele_liked_img{
+                  width:40px;
+                  height:40px;
+                  border-radius:50px;
+                  margin:5px;
+               }
+               .user_data_ele_liked_name{
+                    margin:5px;
+                    padding:5px;
+               }
+               &:hover{
+                transition:all ease 0.3s;
+                transform: scale(1.03)
+               }
+            }
+        }
+    }
+    .listUserLike_blur{
+        width:100%;
+        top:0%;
+        left:0%;
+        height:100%;
+        position:fixed;
+        background-color: black;
+        opacity: 0.1;
+        z-index:2;
+    };
+}
+
+@media (max-width: 1100px) {
+    .commentEle{
+        .listUserLike_wrapper{
+            .listUserLike{
+                left:20%;
+            }}
+    }
+  }
+
+  @media (max-width: 500px) {
+    .commentEle{
+        .listUserLike_wrapper{
+            .listUserLike{
+                width:65%;
+            }}
+    }
+  }
+
+
+    
