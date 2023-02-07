@@ -339,10 +339,9 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
      }
   }
 
-  const BrokenImage ="http://localhost:8800/default.png";
-  const imageOnError = (event) => {
-    event.currentTarget.src = BrokenImage;
-    event.currentTarget.className = "userInfor_img";
+  const BrokenImageHotel ="https://api-booking-app-aws-ec2.onrender.com/default.png";
+  const imageOnErrorHotel = (event) => {
+    event.currentTarget.src = BrokenImageHotel;
   };
   return (
     <div>
@@ -358,7 +357,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                     }}
                             className="post_ele_header_user_info" to={`/users/${dataPost.UserId}`}>
                                 <div className="post_ele_header_user_info_img">
-                                    <img src={dataPost.LinkImgUserCreate} />
+                                    <img src={dataPost.LinkImgUserCreate} onError={imageOnErrorHotel}/>
                                 </div>
                                 <div style={{textDecoration:"none"}} className="post_ele_header_user_info_name">
                                     {dataPost.UserName} 
@@ -409,7 +408,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                                             {dataPost.ListPeopleTag.filter((e)=>e.userId != dataPost.ListPeopleTag[0].userId).map((obj,index)=>(
                                                                     <div className="user_tag_ele" key={index}>
                                                                         <Link className="user_tag_ele_link_wrapper" to={`/users/${obj.userId}`}>
-                                                                            <img className="user_tag_ele_img" src={obj.img} />
+                                                                            <img className="user_tag_ele_img" src={obj.img} onError={imageOnErrorHotel} />
                                                                             <div className="user_tag_ele_username"> 
                                                                                     {obj.username}
                                                                             </div>
@@ -495,7 +494,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                                             {dataPost.ListPeopleTag.filter((e)=>e.userId != dataPost.ListPeopleTag[0].userId).map((obj,index)=>(
                                                                     <div className="user_tag_ele" key={index}>
                                                                         <Link className="user_tag_ele_link_wrapper" to={`/users/${obj.userId}`}>
-                                                                            <img className="user_tag_ele_img" src={obj.img} />
+                                                                            <img className="user_tag_ele_img" src={obj.img} onError={imageOnErrorHotel} />
                                                                             <div className="user_tag_ele_username">
                                                                                     {obj.username}
                                                                             </div>
@@ -752,7 +751,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                     (
                                         <Link key={user._id} to={`/users/${user._id}`}>
                                             <div className="user_vote_element">
-                                                <img className="img_vote_element" src={user.img} alt={user.username}/>
+                                                <img className="img_vote_element" src={user.img} alt={user.username} onError={imageOnErrorHotel}/>
                                                 <div className="name_vote_element">{user.username}</div>
                                             </div>
                                         </Link>

@@ -20,7 +20,10 @@ const Message = ({dataMess,dataConv}) => {
       console.log(e);
     }
   }
-
+  const BrokenImageHotel ="https://api-booking-app-aws-ec2.onrender.com/default.png";
+  const imageOnErrorHotel = (event) => {
+    event.currentTarget.src = BrokenImageHotel;
+  };
   return (
     <div 
         onContextMenu={(e)=>{ 
@@ -36,7 +39,7 @@ const Message = ({dataMess,dataConv}) => {
               (dataMess.senderId != user._id) && (
                 <>
                     <div className="img_sender">
-                        <img src={dataConv.memberList[0].imguser}/>
+                        <img src={dataConv.memberList[0].imguser} onError={imageOnErrorHotel}/>
                     </div>
                     <div className="sender_name">
                         {dataConv.memberList[0].nameuser}

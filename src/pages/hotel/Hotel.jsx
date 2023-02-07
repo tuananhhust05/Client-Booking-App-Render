@@ -392,6 +392,10 @@ const Hotel = () => {
       console.log(e)
     }
   }
+  const BrokenImageHotel ="https://api-booking-app-aws-ec2.onrender.com/default.png";
+  const imageOnErrorHotel = (event) => {
+    event.currentTarget.src = BrokenImageHotel;
+  };
   return (
     <div>
       <Navbar />
@@ -417,6 +421,7 @@ const Hotel = () => {
                   src={data.photos[slideNumber]} // slideNumber giúp hiển thị ảnh muốn chọn 
                   alt=""
                   className="sliderImg"
+                  onError ={imageOnErrorHotel}
                 />
               </div>
               <FontAwesomeIcon
@@ -448,6 +453,7 @@ const Hotel = () => {
                       src={data.photos[0]}
                       alt=""
                       className="hotelImg"
+                      onError ={imageOnErrorHotel}
                     />
                   </div>
                 )
@@ -505,7 +511,7 @@ const Hotel = () => {
                         }
                         <Link className="host_infor" style={{textDecoration:"none",color:"black"}} 
                               to={`/users/${dataHost._id}`}>
-                            <img src={dataHost.img}/>
+                            <img src={dataHost.img}  onError ={imageOnErrorHotel}/>
                             <p>{dataHost.username}</p>
                         </Link>
                       </div>
@@ -522,7 +528,7 @@ const Hotel = () => {
                 <button onClick={()=>setOpenListService(true)}>Reserve or Book Now!</button>
               </div>
               <div className="linkLocation">
-                <img src={linkMapImg}/>
+                <img src={linkMapImg} onError ={imageOnErrorHotel}/>
                 <p style={{display:"flex"}} onClick={()=>OpenMap()} >
                    <MapIcon style={{margin:"10px"}}/>
                    Go to map
@@ -593,7 +599,7 @@ const Hotel = () => {
                   listUserVote.map(user=>
                       (
                         <div key={user.userId} className="user_vote_element">
-                            <img className="img_vote_element" src={user.img} alt={user.name}/>
+                            <img className="img_vote_element" src={user.img} alt={user.name} onError ={imageOnErrorHotel}/>
                             <div className="name_vote_element">{user.name}</div>
                             <div style={{display: "flex",margin: "20px 10px"}} className="count_vote_element">
                                 <p>
