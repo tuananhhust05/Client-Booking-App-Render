@@ -20,10 +20,16 @@ const Conversation = ({dataConv}) => {
         console.log(e)
     }
   }
+  const BrokenImageHotel ="https://api-booking-app-aws-ec2.onrender.com/default.png";
+  const imageOnErrorHotel = (event) => {
+    event.currentTarget.src = BrokenImageHotel;
+  };
   return (
     <div onClick={()=>ReadMessage()} className="conversation_ele">
         <div className="conv_user_infor">
-            <img  className="conv_user_infor_img" src={dataConv.memberList[0].imguser} />
+            <img  className="conv_user_infor_img" 
+                  onError = {imageOnErrorHotel}
+                  src={dataConv.memberList[0].imguser} />
             <div style={(dataConv.unReader == 1) ? {fontWeight:900} : {}} className="conv_user_infor_name">
                     {dataConv.memberList[0].nameuser}
             </div>
