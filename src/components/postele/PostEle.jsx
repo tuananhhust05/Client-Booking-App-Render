@@ -343,6 +343,9 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
   const imageOnErrorHotel = (event) => {
     event.currentTarget.src = BrokenImageHotel;
   };
+  const imageOnError = (event) => {
+    event.currentTarget.src = BrokenImageHotel;
+  };
   return (
     <div>
         
