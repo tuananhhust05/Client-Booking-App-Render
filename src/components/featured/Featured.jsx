@@ -98,6 +98,10 @@ const Featured = () => {
         console.log(e)
      }
   }
+  const BrokenImageHotel ="https://api-booking-app-aws-ec2.onrender.com/default.png";
+  const imageOnErrorHotel = (event) => {
+    event.currentTarget.src = BrokenImageHotel;
+  };
   return (
     <div className="featured">
       
@@ -117,6 +121,7 @@ const Featured = () => {
                       src={obj.img}
                       alt={obj._id}
                       className="featuredImg"
+                      onError={imageOnErrorHotel}
                     />
                     <div className="featuredTitles">
                       <h1>{obj._id}</h1>
@@ -141,7 +146,7 @@ const Featured = () => {
                     <div key={index} 
                          onClick={()=>SeeListHotelInCity(obj._id)}
                          className="ele_form_show_more">
-                         <img className="ele_form_show_more_img" src={obj.img}/>
+                         <img className="ele_form_show_more_img" src={obj.img} onError={imageOnErrorHotel}/>
                          <div className="ele_form_show_more_name">
                              {obj._id}
                          </div>
@@ -159,7 +164,9 @@ const Featured = () => {
                     <div key={index} 
                          className="ele_form_show_more">
                          <Link style={{display:'flex'}} to={`/hotels/${hotel._id}`}>
-                              <img className="ele_form_show_more_img" src={(hotel && hotel.photos && (hotel.photos.length>0) && hotel.photos[0])? hotel.photos[0] :""}/>
+                              <img className="ele_form_show_more_img" 
+                                   onError={imageOnErrorHotel}
+                                   src={(hotel && hotel.photos && (hotel.photos.length>0) && hotel.photos[0])? hotel.photos[0] :""}/>
                               <div className="ele_form_show_more_name">
                                   {hotel.name ? hotel.name : ""}
                               </div>
