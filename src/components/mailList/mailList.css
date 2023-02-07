@@ -20,18 +20,19 @@
 }
 
 .mailInputContainer>button{
-  height: 50px;
   background-color: #0071c2;
   color: white;
   font-weight: 500;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  padding:5px
 }
 
 
 @media (max-width: 460px) {
   .btn_subcribe{
     margin:5px 30%;
+    padding:5px
   }
 }
