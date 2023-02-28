@@ -257,9 +257,10 @@
   z-index:10;
   background-color:white;
   border-radius:10px;
-  width:600px;
   min-height:200px;
-  left:30%;
+  left:20% !important;
+  right:20% !important;
+  width:60% !important;
   top:20%;
   box-shadow: 2px 2px 2px black;
 }
@@ -425,6 +426,9 @@
   }
 }
 @media (max-width: 750px) {
+  .list_user_voted{
+    left:20%;
+  }
   .comment_form{
      left:1%;
   }
@@ -478,6 +482,9 @@
   }
 }
 @media (max-width: 520px) {
+  .list_user_voted{
+    left:10%
+  }
   .reply_comment{
     width:80% !important;
   }

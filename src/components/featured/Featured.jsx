@@ -141,18 +141,20 @@ const Featured = () => {
       {
         openShowMore && (
           <div className="form_show_more">
-              {
-                dataHotelAll.map((obj,index)=>(
-                    <div key={index} 
-                         onClick={()=>SeeListHotelInCity(obj._id)}
-                         className="ele_form_show_more">
-                         <img className="ele_form_show_more_img" src={obj.img} onError={imageOnErrorHotel}/>
-                         <div className="ele_form_show_more_name">
-                             {obj._id}
-                         </div>
-                    </div>
-                ))
-              }
+              <div className = "form_show_more_wrapper">
+                  {
+                    dataHotelAll.map((obj,index)=>(
+                        <div key={index} 
+                            onClick={()=>SeeListHotelInCity(obj._id)}
+                            className="ele_form_show_more">
+                            <img className="ele_form_show_more_img" src={obj.img} onError={imageOnErrorHotel}/>
+                            <div className="ele_form_show_more_name">
+                                {obj._id}
+                            </div>
+                        </div>
+                    ))
+                  }
+              </div>
           </div>
         )
       }

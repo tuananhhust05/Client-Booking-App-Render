@@ -169,6 +169,7 @@
 }
 .list_tag_form{
     flex-direction: column;
+    display:flex;
     background-color: white;
     position:fixed;
     opacity:1;
@@ -186,6 +187,7 @@
     .list_user_finded{
         margin:5px;
         width:90%;
+        overflow-y: auto;
         display:block;
         .user_tag_ele{
             display:flex;

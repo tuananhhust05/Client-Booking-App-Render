@@ -462,6 +462,10 @@ const Post = () => {
     return () => clearTimeout(delayDebounceFn)
   }, [findWordUserTag]);
   
+  const BrokenImageHotel ="https://api-booking-app-aws-ec2.onrender.com/default.png";
+  const imageOnErrorHotel = (event) => {
+    event.currentTarget.src = BrokenImageHotel;
+  };
   const handleChooseUserTag = (obj)=>{
     try{
       if(mode == "edit"){
@@ -709,7 +713,7 @@ const Post = () => {
                                                     <div onClick= {()=>handleCancelUpload(obj)} className="close_icon_wrapper">
                                                         <CloseIcon className="close_icon"/>
                                                     </div>
-                                                    <img src={obj} />
+                                                    <img src={obj} alt={index}  onError={imageOnErrorHotel}/>
                                               </div>
                                             )
                                           )
@@ -907,7 +911,7 @@ const Post = () => {
                               (
                                 <div onClick= {()=>handleChooseUserTag(obj)}
                                     key={index} className="user_tag_ele" >
-                                    <img className="user_tag_ele_img" src={obj.img} />
+                                    <img className="user_tag_ele_img" src={obj.img} alt={index}  onError={imageOnErrorHotel}/>
                                     <div className="user_tag_name">{obj.username} </div>
                                 </div>
                               )
@@ -921,7 +925,7 @@ const Post = () => {
                                 listUserChooseTag.map((obj,index)=>
                                     (
                                       <div key={index}  className="img_tag_choose_wrapper">
-                                          <img className="img_tag_choose" src={obj.img} />
+                                          <img className="img_tag_choose" src={obj.img} alt={index}  onError={imageOnErrorHotel} />
                                           <div 
                                               onClick={()=>handleDeleteChooseUserTag(obj)}
                                               className="img_tag_choose_close">
