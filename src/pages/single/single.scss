@@ -314,6 +314,7 @@
   .reply_comment{
     position:fixed;
     width:20%;
+    padding:10px;
     left:80% !important;
     bottom:0px;
     min-height:100px;
@@ -326,6 +327,8 @@
       background-color: #f8f8f8;
       font-size: 16px;
       resize: none;
+      margin-left:5% !important;
+      width:70%;
     }
     .icon_reply_comment{
       color:rgba(0, 42, 185, 0.7);
@@ -547,7 +550,8 @@
       height:100px;
       .comment_input{
         height:100px !important;
-        margin-left:100px;
+        width: 70%;
+        margin-left: 5%;
       }
       .icon_reply_comment{
           margin-top:30px !important;

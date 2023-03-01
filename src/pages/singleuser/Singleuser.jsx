@@ -4,6 +4,8 @@ import Comment from "../../components/comment/Comment";
 import Notification from "../../components/notification/Notification";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import SendIcon from '@mui/icons-material/Send';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { useLocation, useNavigate ,Link} from "react-router-dom";
 import { useEffect, useState,useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -12,7 +14,7 @@ import axios from "axios";
 import {url} from '../../config.js'
 import {socketCient} from '../../config.js'
 const Singleuser = () => {
-  let socket = socketCient();
+  // let socket = socketCient();
   const { user } = useContext(AuthContext);
   const { loading, error, dispatch } = useContext(AuthContext);
   // chỉ hiển thị thông tin về khách sạn và loại phòng 
@@ -55,6 +57,7 @@ const Singleuser = () => {
 
   const [showNotification,setShowNotification] = useState(false);
   const [contentNotification,setContentNotification]= useState("");
+  const [openFormChat,setOpenFormChat]= useState(false);
   // replace element in react array state 
   const EditCommentListState = (idCommentEdit,CommentEdited) => {
     const newState = listComment.map(obj => {
@@ -298,7 +301,17 @@ const Singleuser = () => {
         })
     }
   }); 
-
+  
+  const sendCommentEnter = (e)=>{
+    try{
+      if (e.key === "Enter") {
+        sendComment();
+      }
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
   return (
     <div className="single">
       <Header type="list" />
@@ -397,15 +410,20 @@ const Singleuser = () => {
       </div>
       
       {/*Tạo bình luận*/}
-      <div className="reply_comment">
-        <textarea onChange={(e)=>setCommentReply(e.target.value)} 
-                 value={commentReply} 
-                 className="comment_input" 
-                 placeholder={commentReplyMode}
-                 rows="9" cols="50">
-        </textarea>
-        <SendIcon onClick={()=>sendComment()} className="icon_reply_comment" style={{}}/>
-      </div>
+      {
+        (openFormChat) && (
+          <div className="reply_comment">
+            <textarea onChange={(e)=>setCommentReply(e.target.value)} 
+                    value={commentReply} 
+                    className="comment_input" 
+                    placeholder={commentReplyMode}
+                    onKeyPress = {(e)=> sendCommentEnter(e)}
+                    rows="9" cols="50">
+            </textarea>
+            {/* <SendIcon onClick={()=>sendComment()} className="icon_reply_comment" style={{}}/> */}
+          </div>
+        )
+      }
 
       {/*background blur*/}
       {
@@ -519,6 +537,26 @@ const Singleuser = () => {
             }
           </div>
         )
+      }
+      {
+        (!openFormChat) && (
+          <div 
+               onClick={()=>{
+                setOpenFormChat(true)
+                }}
+               className="icon_open_message">
+              <ChatBubbleIcon className="icon"/>
+          </div>
+        )
+      }
+      { (openFormChat) && (
+        <div onClick={()=>{
+                setOpenFormChat(false)
+                }}
+               className="icon_open_message">
+                 <CancelIcon className="icon"/>
+        </div>
+      )
       }
     </div>
   );

@@ -13,7 +13,7 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import {url} from '../../config.js'
 import {socketCient} from '../../config.js'
-import { useDropzone } from "react-dropzone"
+
 const Single = () => {
   let socket = socketCient();
   const { user } = useContext(AuthContext);
@@ -294,6 +294,18 @@ const Single = () => {
        console.log(e)
     }
   }
+
+  const sendCommentEnter = (e)=>{
+    try{
+      if (e.key === "Enter") {
+        sendComment();
+      }
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
+
   const BrokenImageHotel ="https://danviet.mediacdn.vn/296231569849192448/2022/12/24/11-167186872826516072932.jpg";
   const imageOnErrorHotel = (event) => {
     event.currentTarget.src = BrokenImageHotel;
@@ -541,9 +553,10 @@ const Single = () => {
                     value={commentReply} 
                     className="comment_input" 
                     placeholder={commentReplyMode}
+                    onKeyPress = {(e)=> sendCommentEnter(e)}
                     rows="9" cols="50">
             </textarea>
-            <SendIcon onClick={()=>sendComment()} className="icon_reply_comment" style={{}}/>
+            {/* <SendIcon onClick={()=>sendComment()} className="icon_reply_comment" style={{}}/> */}
           </div>
         )
       }
