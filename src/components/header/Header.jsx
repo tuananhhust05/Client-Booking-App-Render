@@ -13,24 +13,25 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";  // component chứa icon => cách sử dụng icon fontawesome trong 1 dự án react 
 import "./header.scss";
 import HomeIcon from '@mui/icons-material/Home';
-import { DateRange } from "react-date-range"; // component ngày tháng 
+//import { DateRange } from "react-date-range"; // component ngày tháng 
 import {useDispatch,useSelector} from 'react-redux' // redux 
 import{SearchDataSelector} from '../../redux/selector' // mỗi lần dịch là thay đổi folder cha hiện tại  
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";// import component hoặc hàm 
 import {  useNavigate ,Link} from "react-router-dom";
-import { useEffect, useState,useContext } from "react";
+import { useEffect, useState,useContext ,useRef} from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import {url} from '../../config.js'
 import {socketCient} from '../../config.js'
+import {BottomScrollListener} from 'react-bottom-scroll-listener';
 const Header = ({ type }) => {
   let socket = socketCient();
   const { user } = useContext(AuthContext);
   const Data = useSelector(SearchDataSelector);
   const [destination, setDestination] = useState("");
-  const [openDate, setOpenDate] = useState(false); // biến trạng thái xác định form chọn ngày tháng mở hay không 
+  //const [openDate, setOpenDate] = useState(false); // biến trạng thái xác định form chọn ngày tháng mở hay không 
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -38,7 +39,7 @@ const Header = ({ type }) => {
       key: "selection",
     },
   ]);
-  const [openOptions, setOpenOptions] = useState(false);
+  //const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
     adult: 1,
     children: 0,
@@ -46,7 +47,7 @@ const Header = ({ type }) => {
   });
   const dispatchredux = useDispatch();  // redux 
   const navigate = useNavigate();// dùng để chuyển trang 
-
+  const scrollRef = useRef();
 
   // order list 
   const [openOrderList, setOpenOrderList] = useState(false);
@@ -62,15 +63,19 @@ const Header = ({ type }) => {
   // open close history search 
   const [openHistorySearch, setOpenHistorySearch] = useState(false);
   const [historySearch, setHistorySearch] = useState([]);
+
+  // flag to scroll down 
+  const [flagScrollDown, setFlagScrollDown] = useState(0);
+  
   // cách viết thay đổi option rất thông minh
-  const handleOption = (name, operation) => {
-    setOptions((prev) => {
-      return {
-        ...prev, // giữ nguyên những giá trị sẵn có 
-        [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
-      };
-    });
-  };
+  // const handleOption = (name, operation) => {
+  //   setOptions((prev) => {
+  //     return {
+  //       ...prev, // giữ nguyên những giá trị sẵn có 
+  //       [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
+  //     };
+  //   });
+  // };
   
   const handleSearch = () => {
     dispatchredux({type: "NEW_SEARCH", payload: { destination, date, options }});
@@ -130,6 +135,7 @@ const Header = ({ type }) => {
       update_cov.unReader=1;
       console.log("Dữ liệu nhận được",mess);
       dispatchredux({type: "ADDMESS", payload: { newMess:mess }});
+      setFlagScrollDown(flagScrollDown+1);
     });
     socket.on('DeleteMessage',(convId,messId)=>{
         let arr = Data.listMess.filter((e) => String(e.messageId) !== String(messId));
@@ -145,8 +151,8 @@ const Header = ({ type }) => {
        return result;
     }
     catch(e){
-       return 0;
        console.log(e);
+       return 0;
     }
   }
   const handleOpenChat = (id)=>{
@@ -183,7 +189,9 @@ const Header = ({ type }) => {
        if(convChoose){
           axios.post(`${url()}/conversations/LoadMessage`,{
             conversationId:idconv,
-            userId:user._id
+            userId:user._id,
+            isDevide:true,
+            loaded:0
           }).then((res)=>{
               if(res.data && res.data.data){
                 let arr_messages = [];
@@ -191,6 +199,7 @@ const Header = ({ type }) => {
                   arr_messages.push(res.data.data[i])
                 };
                 dispatchredux({type: "LISTMESS", payload: { listMess:arr_messages }});
+                setFlagScrollDown(flagScrollDown+1);
               }
           }).catch((e)=>{
             console.log(e)
@@ -225,7 +234,8 @@ const Header = ({ type }) => {
           };
           dispatchredux({type: "ADDMESS", payload: { newMess:mess }});
           axios.post(`${url()}/conversations/SendMessage`,mess).catch((e)=>{console.log(e)});
-          socket.emit("sendMessage",Data.conversationChosen.memberList[0].memberId,mess)
+          socket.emit("sendMessage",Data.conversationChosen.memberList[0].memberId,mess);
+          setFlagScrollDown(flagScrollDown+1);
       }
     }
     catch(e){
@@ -245,6 +255,41 @@ const Header = ({ type }) => {
       console.log(e)
     }
   }
+  
+  const handleScroll = event => {
+     try{
+       if(Number(event.currentTarget.scrollTop) ==0){
+            axios.post(`${url()}/conversations/LoadMessage`,{
+                conversationId:Data.conversationChosen._id,
+                userId:user._id,
+                isDevide:true,
+                loaded:Data.countLoadedMessage
+            }).then((res)=>{
+              if(res && res.data && res.data.data && (res.data.data.length > 0)){
+                if(res.data && res.data.data){
+                  let arr_messages = [];
+                  
+                  for(let i=res.data.data.length-1; i>=0; i--){
+                    arr_messages.push(res.data.data[i])
+                  };
+                  dispatchredux({type: "LOADMESS", payload: { listMess:arr_messages }});
+                  scrollRef.current.scrollIntoView({ 
+                    behavior: 'smooth', block: 'center'
+                  });
+                }
+              }
+            }).catch((e)=>{console.log(e)})
+       }
+     }
+     catch(e){
+        console.log(e)
+     }
+  };
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });// đoạn code để trượt xuống khi có tin nhắn mới 
+  }, [flagScrollDown]);
+  
   return (
     <div className="header">
       <div
@@ -307,6 +352,16 @@ const Header = ({ type }) => {
                <Link to={`/login`} style={{color:'white'}}>
                     Come Back
                </Link>
+            </button>
+            <button className="headerBtn">
+               <a style={{color:'white'}} href="https://api-booking-app-aws-ec2.onrender.com/homepage.html">
+                  Home Page
+               </a>
+            </button>
+            <button className="headerBtn">
+               <a style={{color:'white'}} href="https://admin-booking-app-render.onrender.com">
+                  Admin Page
+               </a>
             </button>
             <div className="headerSearch">
               <div className="headerSearchItem" id= "input_header">
@@ -612,7 +667,6 @@ const Header = ({ type }) => {
                             <div key={index} onClick={()=>handleStartChat(item._id)} >
                                 <Conversation  dataConv={item}/>
                             </div>
-      
                           ))
                         }
                     </div>
@@ -621,16 +675,23 @@ const Header = ({ type }) => {
                 {
                   (Data.chatMode) && (
                     <div className="message-box">
-                          <div className="message_list_wrapper">
-                              { 
-                                [...new Map(Data.listMess.map((item) => [item["messageId"], item])).values()].map((item,index)=>(
-                                  <Message 
-                                      dataMess={item} 
-                                      dataConv={Data.conversationChosen} 
-                                      key={index}
-                                  />
-                                ))
-                              }
+                          <div className="message_list_wrapper" onScroll={(e)=>handleScroll(e)}>
+                                    { 
+                                      [...new Map(Data.listMess.map((item) => [item["messageId"], item])).values()]
+                                        .sort((a,b)=>{
+                                          if (new Date(a.createAt) < new Date(b.createAt)) {
+                                            return -1;
+                                          }
+                                        })
+                                        .map((item,index)=>(
+                                        <div ref={scrollRef} key={index}>
+                                              <Message 
+                                                  dataMess={item} 
+                                                  dataConv={Data.conversationChosen} 
+                                              />
+                                        </div>
+                                      ))
+                                    }
                           </div>
                           <div className="message-box-input-wrapper">
                               <input 

@@ -77,6 +77,7 @@
   border: none;
   padding: 10px;
   cursor: pointer;
+  margin:5px;
 }
 
 .headerSearch {
@@ -519,6 +520,7 @@
   flex-direction: column;
   .message_list_wrapper{
     overflow-y: auto;
+    margin:15px;
   }
   .message-box-input-wrapper{
     position:absolute;

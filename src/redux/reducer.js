@@ -15,11 +15,18 @@ const INITIAL_STATE = {
     listConv:[],
     chatMode:false,
     conversationChosen:{},
-    listMess:[]
+    listMess:[],
+    countLoadedMessage:0
 };
 // { destination, date, options }
 // reducer bản chất là 1 hàm nhận vào 2 đối số
 // đẩy dữ liệu mặc định vào store 
+const add_arr_to_arr = (arr1,arr2)=>{
+    for(let i=0;i<arr1.length;i++){
+       arr2.push(arr1[i])
+    };
+    return arr2;
+}
 const SearchReducerRedux = (state =INITIAL_STATE, action) => {  // state lấy mặc định từ store 
     switch (action.type) {
       case "ADDMESS":
@@ -42,7 +49,14 @@ const SearchReducerRedux = (state =INITIAL_STATE, action) => {  // state lấy m
       case "LISTMESS":
         return { 
           ...state, 
-          listMess: action.payload.listMess
+          listMess: action.payload.listMess,
+          countLoadedMessage:action.payload.listMess.length
+        }
+      case "LOADMESS":
+        return { 
+          ...state, 
+          listMess: add_arr_to_arr(action.payload.listMess,state.listMess) ,
+          countLoadedMessage:Number(state.countLoadedMessage) + action.payload.listMess.length
         }
       case "ADDCONV":
         return { 
