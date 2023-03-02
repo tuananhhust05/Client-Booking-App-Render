@@ -24,7 +24,9 @@ const MailList = () => {
           let dataConv ={};
           let response = await axios.post(`${url()}/conversations/CreateConv`,{
             senderId:user._id,
-            receiverId:userId
+            receiverId:userId,
+            isDevide:true,
+            loaded:0
           });
           
           if(response && response.data && response.data.data){
@@ -33,7 +35,9 @@ const MailList = () => {
                   dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                   axios.post(`${url()}/conversations/LoadMessage`,{
                     conversationId:response.data.data._id,
-                    userId:user._id
+                    userId:user._id,
+                    isDevide:true,
+                    loaded:0
                   }).then((res)=>{
                       if(res.data && res.data.data){
                         let arr_messages = [];
@@ -57,7 +61,9 @@ const MailList = () => {
                   dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                   axios.post(`${url()}/conversations/LoadMessage`,{
                     conversationId:response.data.data._id,
-                    userId:user._id
+                    userId:user._id,
+                    isDevide:true,
+                    loaded:0
                   }).then((res)=>{
                       if(res.data && res.data.data){
                         let arr_messages = [];

@@ -190,7 +190,9 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
                     dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                     axios.post(`${url()}/conversations/LoadMessage`,{
                       conversationId:response.data.data._id,
-                      userId:hostId
+                      userId:hostId,
+                      isDevide:true,
+                      loaded:0
                     }).then((res)=>{
                         if(res.data && res.data.data){
                           let arr_messages = [];
@@ -214,7 +216,9 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
                     dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                     axios.post(`${url()}/conversations/LoadMessage`,{
                       conversationId:response.data.data._id,
-                      userId:hostId
+                      userId:hostId,
+                      isDevide:true,
+                      loaded:0
                     }).then((res)=>{
                         if(res.data && res.data.data){
                           let arr_messages = [];
