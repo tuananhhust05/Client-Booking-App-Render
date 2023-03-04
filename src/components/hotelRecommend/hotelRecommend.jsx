@@ -1,5 +1,5 @@
 import "./hotelRecommend.scss";
-import useFetch from "../../hooks/useFetch"
+// import useFetch from "../../hooks/useFetch"
 import {url} from '../../config.js'
 import {useEffect,useState,useContext} from "react";
 import {Link} from 'react-router-dom'
@@ -20,7 +20,7 @@ const HotelRecommend = () => {
     if(user){
       takeData();
     }
-  },[]);
+  },[user]);
   
   return (
     <div className="hotelRecommend">
@@ -29,7 +29,9 @@ const HotelRecommend = () => {
                 <div key={index} className="hotelRecommend_ele_wrapper">
                    <Link to={`/hotels/${obj._id}`}>
                         <div className="hotelRecommend_ele">
-                                <img src={
+                                <img 
+                                    alt={index}
+                                    src={
                                           (obj.photos && (obj.photos.length) && (obj.photos.length>0)) ? (obj.photos[0]):
                                           "https://images.squarespace-cdn.com/content/v1/5aadf482aa49a1d810879b88/1626698419120-J7CH9BPMB2YI728SLFPN/1.jpg"
                                     } 

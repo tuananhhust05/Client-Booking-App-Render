@@ -1,7 +1,7 @@
 import {
   faBed,
-  faCalendarDays,
-  faPerson,
+  // faCalendarDays,
+  // faPerson,
   faBell
 } from "@fortawesome/free-solid-svg-icons"; // icon 
 import Conversation from "../conversation/Conversation";
@@ -18,33 +18,45 @@ import {useDispatch,useSelector} from 'react-redux' // redux
 import{SearchDataSelector} from '../../redux/selector' // mỗi lần dịch là thay đổi folder cha hiện tại  
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { format } from "date-fns";// import component hoặc hàm 
+// import { format } from "date-fns";// import component hoặc hàm 
 import {  useNavigate ,Link} from "react-router-dom";
 import { useEffect, useState,useContext ,useRef} from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import {url} from '../../config.js'
 import {socketCient} from '../../config.js'
-import {BottomScrollListener} from 'react-bottom-scroll-listener';
+// import {BottomScrollListener} from 'react-bottom-scroll-listener';
 const Header = ({ type }) => {
   let socket = socketCient();
   const { user } = useContext(AuthContext);
   const Data = useSelector(SearchDataSelector);
   const [destination, setDestination] = useState("");
   //const [openDate, setOpenDate] = useState(false); // biến trạng thái xác định form chọn ngày tháng mở hay không 
-  const [date, setDate] = useState([
+  // const [date, setDate] = useState([
+  //   {
+  //     startDate: new Date(),
+  //     endDate: new Date(),
+  //     key: "selection",
+  //   },
+  // ]);
+  const date = 
     {
       startDate: new Date(),
       endDate: new Date(),
       key: "selection",
-    },
-  ]);
+    };
+  
   //const [openOptions, setOpenOptions] = useState(false);
-  const [options, setOptions] = useState({
+  // const [options, setOptions] = useState({
+  //   adult: 1,
+  //   children: 0,
+  //   room: 1,
+  // });
+  const options = {
     adult: 1,
     children: 0,
     room: 1,
-  });
+  }
   const dispatchredux = useDispatch();  // redux 
   const navigate = useNavigate();// dùng để chuyển trang 
   const scrollRef = useRef();
@@ -57,7 +69,7 @@ const Header = ({ type }) => {
   const [openOrderDetail, setOpenOrderDetail] = useState(false);
 
   // chat 
-  const [chatOption,setChatOption] = useState("");  // sendNormal or 
+  //const [chatOption,setChatOption] = useState("");  // sendNormal or edit
   const [messToSend,setMessToSend] = useState("");
 
   // open close history search 
@@ -111,9 +123,9 @@ const Header = ({ type }) => {
       
       axios.post(`${url()}/conversations/getListConvByUserId`,{userId:user._id}).then((res)=>{
         if(res && res.data && res.data.data){
-          console.log("Dữ liệu conv",res.data.data);
+          // console.log("Dữ liệu conv",res.data.data);
           dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
-          dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> e.unReader == 1).length }});
+          dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
         }
       }).catch((e)=>{
         console.log(e)
@@ -126,14 +138,14 @@ const Header = ({ type }) => {
       if(notification && notification._id){
         dispatchredux({type: "ADDNOTIFICATION", payload: { newNotification:notification}});
       }
-      if(additionalInfor && (additionalInfor.Type == "ResonseOrder") && additionalInfor.IdOrder && (String(additionalInfor.IdOrder).length == 24) && additionalInfor.TypeOrder){
+      if(additionalInfor && (String(additionalInfor.Type) === "ResonseOrder") && additionalInfor.IdOrder && (String(additionalInfor.IdOrder).length === 24) && additionalInfor.TypeOrder){
         dispatchredux({type: "UPDATEORDER", payload: { IdOrder:additionalInfor.IdOrder, Status:additionalInfor.TypeOrder}});
       }
     });
     socket.on("sendMessage",(mess)=>{
       let update_cov = {};
       update_cov.unReader=1;
-      console.log("Dữ liệu nhận được",mess);
+      // console.log("Dữ liệu nhận được",mess);
       dispatchredux({type: "ADDMESS", payload: { newMess:mess }});
       setFlagScrollDown(flagScrollDown+1);
     });
@@ -141,7 +153,7 @@ const Header = ({ type }) => {
         let arr = Data.listMess.filter((e) => String(e.messageId) !== String(messId));
         dispatchredux({type: "LISTMESS", payload: { listMess:arr }});
     })
-  },[]);
+  },[socket,user,Data.listMess,dispatchredux,flagScrollDown,]);
   
 
   const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -161,7 +173,7 @@ const Header = ({ type }) => {
       axios.post(`${url()}/conversations/getListConvByUserId`,{userId:user._id}).then((res)=>{
         if(res && res.data && res.data.data){
           dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
-          dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> e.unReader == 1).length }});
+          dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
         }
       }).catch((e)=>{
         console.log(e)
@@ -204,7 +216,7 @@ const Header = ({ type }) => {
           }).catch((e)=>{
             console.log(e)
           });
-          if(convChoose.unReader == 1){
+          if(Number(convChoose.unReader) === 1){
             dispatchredux({type: "CHANGECONVERSATIONUNREADER", payload: { count:-1 }});
           }
           let update_cov = {};
@@ -225,7 +237,7 @@ const Header = ({ type }) => {
           setMessToSend("");
           let mess = {
              conversationId:Data.conversationChosen._id,
-             messageId:`${((new Date).getTime() * 10000) + 621355968000000000 +8}_${user._id}`,
+             messageId:`${(( ((new Date()).getTime()) * 10000 ) + 621355968000000000 +8) }_${user._id}`,
              message:e.target.value,
              senderId: user._id,
              emotion:[],
@@ -258,7 +270,7 @@ const Header = ({ type }) => {
   
   const handleScroll = event => {
      try{
-       if(Number(event.currentTarget.scrollTop) ==0){
+       if(Number(event.currentTarget.scrollTop) === 0){
             axios.post(`${url()}/conversations/LoadMessage`,{
                 conversationId:Data.conversationChosen._id,
                 userId:user._id,
@@ -517,10 +529,10 @@ const Header = ({ type }) => {
                           (
                             <div key={index} onClick={()=>ReadNotification(notification._id)} className="notification_list_ele_wrapper">
                               {
-                                 (notification.Status == 1) ?(
+                                 (Number(notification.Status) === 1) ?(
                                     <div>
                                     {   
-                                        ((notification.type == "OrderSuccess") || (notification.type == "ReceiveOrder") || (notification.type =="AcceptOrder") || (notification.type =="DenyOrder")) && (
+                                        ((String(notification.type) === "OrderSuccess") || (String(notification.type) === "ReceiveOrder") || (String(notification.type) ==="AcceptOrder") || (String(notification.type) === "DenyOrder")) && (
                                           
                                               <div 
                                                   onClick={()=>{
@@ -538,7 +550,7 @@ const Header = ({ type }) => {
                                         ) 
                                       }
                                       {
-                                        (notification.type == "CommentHotel") && (
+                                        (String(notification.type) === "CommentHotel") && (
                                                  <Link to={`/hotels/${notification.hotelId}`} style={{textDecoration: "none", color:"white",fontSize:"15px"}}>
                                                       <div style={{backgroundColor:"rgba(46, 138, 231, 0.6)"}} className="notification_list_ele">
                                                           <div className="notification_list_ele_icon">
@@ -552,7 +564,7 @@ const Header = ({ type }) => {
                                         )
                                       }
                                       {
-                                        (notification.type == "CommentRoom") && (
+                                        (String(notification.type) === "CommentRoom") && (
                                                   <Link to={`/rooms/${notification.roomId}`} style={{textDecoration: "none", color:"white",fontSize:"15px"}}>
                                                               <div style={{backgroundColor:"rgba(46, 138, 231, 0.6)"}} className="notification_list_ele">
                                                                   <div className="notification_list_ele_icon">
@@ -569,7 +581,7 @@ const Header = ({ type }) => {
                                  ):(
                                   <>
                                         { 
-                                          ((notification.type == "OrderSuccess") || (notification.type == "ReceiveOrder") || (notification.type =="AcceptOrder") || (notification.type =="DenyOrder")) && (
+                                          ((String(notification.type) === "OrderSuccess") || ( String(notification.type) === "ReceiveOrder") || (String(notification.type) === "AcceptOrder") || (String(notification.type) === "DenyOrder")) && (
                                             
                                                 <div  
                                                      onClick={()=>{
@@ -588,7 +600,7 @@ const Header = ({ type }) => {
                                           ) 
                                         }
                                         {
-                                          (notification.type == "CommentHotel") && (
+                                          (String(notification.type) === "CommentHotel") && (
                                                   <Link to={`/hotels/${notification.hotelId}`} style={{textDecoration: "none", color:"white",fontSize:"15px"}}>
                                                         <div  className="notification_list_ele">
                                                             <div className="notification_list_ele_icon">
@@ -602,7 +614,7 @@ const Header = ({ type }) => {
                                           )
                                         }
                                         {
-                                        (notification.type == "CommentRoom") && (
+                                        (String(notification.type) === "CommentRoom") && (
                                                   <Link to={`/rooms/${notification.roomId}`} style={{textDecoration: "none", color:"white",fontSize:"15px"}}>
                                                               <div  className="notification_list_ele">
                                                                   <div className="notification_list_ele_icon">
@@ -635,12 +647,12 @@ const Header = ({ type }) => {
                     <div 
                        onClick={()=>{
                           dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:false }});
-                          setChatOption("");
+                          // setChatOption("");
                           axios.post(`${url()}/conversations/getListConvByUserId`,{userId:user._id}).then((res)=>{
                             if(res && res.data && res.data.data){
-                              console.log("Dữ liệu conv",res.data.data);
+                              // console.log("Dữ liệu conv",res.data.data);
                               dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
-                              dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> e.unReader == 1).length }});
+                              dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
                             }
                           }).catch((e)=>{
                             console.log(e)
@@ -681,6 +693,9 @@ const Header = ({ type }) => {
                                         .sort((a,b)=>{
                                           if (new Date(a.createAt) < new Date(b.createAt)) {
                                             return -1;
+                                          }
+                                          else{
+                                            return 1;
                                           }
                                         })
                                         .map((item,index)=>(

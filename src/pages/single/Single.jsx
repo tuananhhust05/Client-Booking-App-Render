@@ -5,7 +5,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import Comment from "../../components/comment/Comment";
 import Canlerdal from "../../components/canlerdal/Canlerdal";
 import StarRateIcon from '@mui/icons-material/StarRate';
-import SendIcon from '@mui/icons-material/Send';
+// import SendIcon from '@mui/icons-material/Send';
 import {BedroomParent} from '@mui/icons-material'
 import { useLocation, useNavigate ,Link} from "react-router-dom";
 import { useEffect, useState,useContext } from "react";
@@ -37,9 +37,9 @@ const Single = () => {
   const [openEditForm,setOpenEditForm] = useState(false);
   
   // data để edit thông tin khách sạn 
-  const [dataHotelToEdit,setDataHotelToEdit] = useState({});
-  const [dataRoomToEdit,setDataRoomToEdit] = useState({});
-  const [dataUserToEdit,setDataUserToEdit] = useState({})
+  // const [dataHotelToEdit,setDataHotelToEdit] = useState({});
+  // const [dataRoomToEdit,setDataRoomToEdit] = useState({});
+  // const [dataUserToEdit,setDataUserToEdit] = useState({})
   // nhập phản hồi 
   const [commentReply,setCommentReply] = useState("");
 
@@ -89,7 +89,7 @@ const Single = () => {
               setCommentReply("");
               setCommentReplyMode("");
             }
-            socket.emit("editcomment",listUserCare.filter((e)=> e!= user._id),res.data.data,"rooms");
+            socket.emit("editcomment",listUserCare.filter((e)=> String(e) !== String(user._id)),res.data.data,"rooms");
           }
          
       }
@@ -148,7 +148,7 @@ const Single = () => {
          setListComment((current) =>
             current.filter((e) => String(e._id) !== String(res.data.data))
          );
-         socket.emit("deletecomment",listUserCare.filter((e)=> e!= user._id),res.data.data,"rooms");
+         socket.emit("deletecomment",listUserCare.filter((e)=> String(e) !== String(user._id)),res.data.data,"rooms");
         }
       }
       else if(String(path)=== "users"){
@@ -166,117 +166,117 @@ const Single = () => {
   }
   useEffect(() => {
     const takeData= async ()=>{ 
-        if(String(location.pathname.split("/")[1]) === "rooms"){
-            let res = await axios.get(`${url()}/rooms/${id}`);
-            if(res && res.data){
-              setData(res.data);
-              setDataRoomToEdit(res.data)
-              // dữ liệu về comment 
-              const res2 = await axios.post(`${url()}/comments/TakeCommentByRoomIdHotelId`,{
-                 roomId: id,
-                 hotelId:res.data.hotelOwner
-              }); 
-              if(res2.data && res2.data.data){
-                setListComment(res2.data.data);
-              }
+        try {
+          if(String(location.pathname.split("/")[1]) === "rooms"){
+              let res = await axios.get(`${url()}/rooms/${id}`);
+              if(res && res.data){
+                setData(res.data);
+                // setDataRoomToEdit(res.data)
+                // dữ liệu về comment 
+                const res2 = await axios.post(`${url()}/comments/TakeCommentByRoomIdHotelId`,{
+                  roomId: id,
+                  hotelId:res.data.hotelOwner
+                }); 
+                if(res2.data && res2.data.data){
+                  setListComment(res2.data.data);
+                }
 
-              // dữ liệu về khách sạn chứa phòng 
-              const resHotel = await axios.get(`${url()}/hotels/find/${res.data.hotelOwner}`);
-              if(resHotel && resHotel.data && resHotel.data._id){
-                setDataHotelOfRoom(resHotel.data);
-              }
-            };
-            axios.get(`${url()}/votes//CountCaculateVoteRoom/${id}`).then((res3)=>{
-              if(res3.data && res3.data.data && res3.data.data.mediumVote && res3.data.data.countVote){
-                setMediumVote(res3.data.data.mediumVote);
-                setCountVote(res3.data.data.countVote);
-              }
-            }).catch((e)=>{
-              console.log(e);
-            })
-          
-            axios.post(`${url()}/comments/TakeListUserCare`,{Id:id,Type:"rooms"}).then((response)=>{
-              if(response && response.data && response.data.data){
-                 setListUserCare(response.data.data)
-              }
-            }).catch((e)=>{console.log(e)})
-        }
-        socket.on("comment",(comment,type)=>{
-          if((String(location.pathname.split("/")[1]) === "rooms") && (type == "rooms") ){
-              if(comment && comment._id && (comment.roomId) && (!comment.userIdHostPage) 
-                  && comment.hotelId && (comment.roomId == id)){
-                  setListComment(current => [comment,...current]);
-              }
+                // dữ liệu về khách sạn chứa phòng 
+                const resHotel = await axios.get(`${url()}/hotels/find/${res.data.hotelOwner}`);
+                if(resHotel && resHotel.data && resHotel.data._id){
+                  setDataHotelOfRoom(resHotel.data);
+                }
+              };
+              axios.get(`${url()}/votes//CountCaculateVoteRoom/${id}`).then((res3)=>{
+                if(res3.data && res3.data.data && res3.data.data.mediumVote && res3.data.data.countVote){
+                  setMediumVote(res3.data.data.mediumVote);
+                  setCountVote(res3.data.data.countVote);
+                }
+              }).catch((e)=>{
+                console.log(e);
+              })
+            
+              axios.post(`${url()}/comments/TakeListUserCare`,{Id:id,Type:"rooms"}).then((response)=>{
+                if(response && response.data && response.data.data){
+                  setListUserCare(response.data.data)
+                }
+              }).catch((e)=>{console.log(e)})
           }
-        })
-        socket.on("editcomment",(comment,type)=>{
-          if( (String(location.pathname.split("/")[1]) === "rooms") && (type == "rooms") ){
-            console.log("edit 1")
-            if(comment && comment._id && (comment.roomId) && (!comment.userIdHostPage) 
-               && comment.hotelId && (comment.roomId == id)){
-                console.log("edit 2")
-                 setListComment(current => current.map(
-                   (element, i) => element._id == comment._id ? comment
-                                           : element
-                 ));
+          socket.on("comment",(comment,type)=>{
+            if((String(location.pathname.split("/")[1]) === "rooms") && (String(type) === "rooms") ){
+                if(comment && comment._id && (comment.roomId) && (!comment.userIdHostPage) 
+                    && comment.hotelId && ( String(comment.roomId) === String(id))){
+                    setListComment(current => [comment,...current]);
+                }
             }
-          }
-        })
-        socket.on("deletecomment",(commentId,type)=>{
-          if( (String(location.pathname.split("/")[1]) === "rooms") && (type == "rooms") ){
-            setListComment((current) =>
-               current.filter((e) => String(e._id) !== String(commentId))
-            );
-          }
-        })
+          })
+          socket.on("editcomment",(comment,type)=>{
+            if( (String(location.pathname.split("/")[1]) === "rooms") && (String(type) === "rooms") ){
+              // console.log("edit 1")
+              if(comment && comment._id && (comment.roomId) && (!comment.userIdHostPage) 
+                && comment.hotelId && (String(comment.roomId) === String(id))){
+                  // console.log("edit 2")
+                  setListComment(current => current.map(
+                    (element, i) => String(element._id) === String(comment._id) ? comment
+                                            : element
+                  ));
+              }
+            }
+          })
+          socket.on("deletecomment",(commentId,type)=>{
+            if( (String(location.pathname.split("/")[1]) === "rooms") && (String(type) === "rooms") ){
+              setListComment((current) =>
+                current.filter((e) => String(e._id) !== String(commentId))
+              );
+            }
+          })
+        }
+        catch(e){
+           navigate("/");
+           console.log(e);
+        }
       }
-    try{
-      takeData();
-    }
-    catch(e){
-      navigate("/");
-      console.log(e);
-    }
-  },[])
+    takeData();
+  },[location,id,socket,navigate])
 
   const takeListUserVote  = async ()=>{
      if(String(location.pathname.split("/")[1]) === "rooms"){
       const res = await axios.get(`${url()}/votes/TakeListInforUserVoteRoom/${id}`); 
       if(res.data && res.data.data){
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setListUserVote(res.data.data);
         setOpenListUserVote(true)
       }
     }
   }
 
-  const handleChangeValueEdit = (value,field)=>{
-    if(String(location.pathname.split("/")[1]) === "rooms"){
-      setDataRoomToEdit((prev) => {
-        return {
-          ...prev, 
-          [field]: value,
-        };
-      });
-    }
+  // const handleChangeValueEdit = (value,field)=>{
+  //   if(String(location.pathname.split("/")[1]) === "rooms"){
+  //     setDataRoomToEdit((prev) => {
+  //       return {
+  //         ...prev, 
+  //         [field]: value,
+  //       };
+  //     });
+  //   }
    
-  }
+  // }
 
-  const handleSendEdit = async ()=>{
-     try{
-      setOpenEditForm(false);
-      if (String(location.pathname.split("/")[1]) === "rooms"){
-        let res = await axios.put(`${url()}/rooms/${id}`,dataRoomToEdit);
-        if(res && res.data){
-          setData(res.data);
-          setDataRoomToEdit(res.data)
-        }
-      }
-     }
-     catch(e){
-      console.log(e)
-     }
-  }
+  // const handleSendEdit = async ()=>{
+  //    try{
+  //     setOpenEditForm(false);
+  //     if (String(location.pathname.split("/")[1]) === "rooms"){
+  //       let res = await axios.put(`${url()}/rooms/${id}`,dataRoomToEdit);
+  //       if(res && res.data){
+  //         setData(res.data);
+  //         setDataRoomToEdit(res.data)
+  //       }
+  //     }
+  //    }
+  //    catch(e){
+  //     console.log(e)
+  //    }
+  // }
 
   const handleChooseRoomToBook = async (roomNum,IdroomNum)=>{
     try{
@@ -590,10 +590,10 @@ const Single = () => {
               <div className="listImage_temp">
                   { 
                     data.photos && (data.photos.length >0)  && (
-                      data.photos.map(imgSource=>
-                        ( <div key={imgSource} className="img_listImage_wrapper">
+                      data.photos.map((imgSource,key)=>
+                        ( <div key={key} className="img_listImage_wrapper">
                             {/* <CloseIcon onClick={()=>handeDeleteImgHotel(id,imgSource)} className="close_icon"/> */}
-                             <img  src={imgSource} className="img_listImage"/>
+                             <img alt={imgSource}  src={imgSource} className="img_listImage"/>
                           </div>
                         )
                       )
@@ -622,6 +622,10 @@ const Single = () => {
                                     <div key={roomNum._id} onClick={()=>handleChooseRoomToBook(roomNum.number,roomNum._id)} className="list_room_ele_num">
                                           <BedroomParent className="list_room_ele_num_icon" />
                                           <p>{roomNum.number}</p>
+                                           <div className="list_room_ele_num_count_bed">
+                                              <div>{roomNum.countBed}</div>
+                                              <div>{ (Number(roomNum.countBed) > 1) ? "Beds" : "Bed" } </div>
+                                           </div>
                                     </div>
                                   )
                                 )
@@ -682,7 +686,7 @@ const Single = () => {
       {
         openEditForm && (
           <div className="editForm">
-            {
+            {/* {
               (path === "hotels") && (
                 <>
                   <input
@@ -720,8 +724,8 @@ const Single = () => {
                   <button onClick={()=>handleSendEdit()} className="snip1582">Submit</button>
                 </>
               )
-            }
-            {
+            } */}
+            {/* {
               (path === "rooms") && (
                 <>
                   <input
@@ -751,8 +755,8 @@ const Single = () => {
                   <button onClick={()=>handleSendEdit()} className="snip1582">Submit</button>
                 </>
               )
-            }
-            {
+            } */}
+            {/* {
               (path === "users") && (
                 <>
                   <input
@@ -790,7 +794,7 @@ const Single = () => {
                   <button onClick={()=>handleSendEdit()} className="snip1582">Submit</button>
                 </>
               )
-            }
+            } */}
           </div>
         )
       }

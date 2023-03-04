@@ -16,9 +16,9 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
   // 1 lớn hơn là true 
   const compareTwoDate = (date1, date2) =>{
      try{
-        if(Number(date1.year) == Number(date2.year)){
-            if(Number(date1.month) == Number(date2.month)){
-                if(Number(date1.day) == Number(date2.day)){
+        if(Number(date1.year) === Number(date2.year)){
+            if(Number(date1.month) === Number(date2.month)){
+                if(Number(date1.day) === Number(date2.day)){
                      return false;
                 }
                 else if(Number(date1.day) > Number(date2.day)){
@@ -43,8 +43,8 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
         }
      }
      catch(e){
-        return false;
         console.log(e)
+        return false;
      }
   }
   const get_day_of_month = (monthIn,yearIn) => {
@@ -71,12 +71,12 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
 
   const handleChangeTime = (value)=>{
      try{
-        if(monthIntern == 1 && (Number(value) == -1)){
+        if(Number(monthIntern) === 1 && (Number(value) === -1)){
           setArrayDayOnMonth(takeArrayDayOnMonth(12,yearIntern-1));
           setMonthIntern(12);
           setYearIntern(yearIntern-1);
         }
-        else if( monthIntern == 12 &&  (Number(value) == 1)){
+        else if( Number(monthIntern) === 12 &&  (Number(value) === 1)){
           setArrayDayOnMonth(takeArrayDayOnMonth(1,yearIntern+1));
           setMonthIntern(1);
           setYearIntern(yearIntern+1);
@@ -142,26 +142,26 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
           return finalResult;
       }
       catch(e){
-          return [ele]
           console.log(e)
+          return [ele]
       }
   }
   const ChooseDayToBookRoom = (value) =>{
     try{
-        if(arrayDayChoose.length == 0){
+        if(Number(arrayDayChoose.length) === 0){
             setArrayDayChoose(current => [...current, value]);
             setAllowDayChoose(takeListDayAllow(value));
         }
-        else if(arrayDayChoose.length == 1){
+        else if(Number(arrayDayChoose.length) === 1){
             let array = []
             if(compareTwoDate(value,arrayDayChoose[0])){
-                if(value.month == arrayDayChoose[0].month ){
+                if(String(value.month) === String(arrayDayChoose[0].month) ){
                    for(let i=arrayDayChoose[0].day; i<=value.day; i++){
                       array.push({month:value.month,year:value.year,day:i})
                    }
                 }
                 else{
-                   if(value.year == arrayDayChoose[0].year){
+                   if(Number(value.year) === Number(arrayDayChoose[0].year)){
                           for(let i = arrayDayChoose[0].day; i<= get_day_of_month(arrayDayChoose[0].month,arrayDayChoose[0].year); i++){
                                array.push({month:arrayDayChoose[0].month,year:arrayDayChoose[0].year,day:i})
                           }
@@ -180,13 +180,13 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
                 }
             }
             else{
-                if(value.month == arrayDayChoose[0].month ){
+                if(String(value.month) === String(arrayDayChoose[0].month) ){
                     for(let i=value.day; i<=arrayDayChoose[0].day; i++){
                       array.push({month:value.month,year:value.year,day:i})
                     }
                 }
                 else{
-                    if(value.year == arrayDayChoose[0].year){
+                    if(String(value.year) === String(arrayDayChoose[0].year)){
                           for(let i = value.day; i<= get_day_of_month(value.month,value.year); i++){
                                 array.push({month:value.month,year:value.year,day:i})
                           }
@@ -204,8 +204,8 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
                     }
                 }
             }
-            let array2 = array.filter((ele)=>arrayDayUnAvailability.findIndex((e)=> e.day == ele.day && e.month == ele.month && e.year == ele.year) == -1)
-            if(array2.length != array.length){
+            let array2 = array.filter( (ele) => Number(arrayDayUnAvailability.findIndex((e)=> String(e.day) === String(ele.day) && String(e.month) === String(ele.month) && String(e.year) === ele.year)) === -1)
+            if(String(array2.length) !== String(array.length)){
               setArrayDayChoose([]);
               setAllowDayChoose([])
             }
@@ -303,13 +303,13 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
                                       (arrayDayChoose.length <= 1) ? (
                                         <>
                                             {
-                                                (allowDayChoose.length == 0) ? (
+                                                ( Number(allowDayChoose.length) === 0) ? (
                                                   <>
                                                       { 
                                                             (
                                                               compareTwoDate({day:item,month:monthIntern,year:yearIntern},today)
                                                               && arrayDayUnAvailability 
-                                                              &&(arrayDayUnAvailability.findIndex((e)=> e.day == item && e.month == monthIntern && e.year == yearIntern) == -1) 
+                                                              &&( Number(arrayDayUnAvailability.findIndex((e)=> String(e.day) === String(item) && String(e.month) === String(monthIntern) && String(e.year) === String(yearIntern))) === -1) 
                                                             )  ? (
                                                                   <div onClick={()=>ChooseDayToBookRoom({day:item,month:monthIntern,year:yearIntern})} style={{backgroundColor:"rgba(46, 98, 244, 0.2)"}} className="Canlerdal_day_ele">
                                                                       {item}
@@ -325,10 +325,10 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
                                                   <>
                                                       { 
                                                               (
-                                                                (allowDayChoose.findIndex((e)=> e.day == item && e.month == monthIntern && e.year == yearIntern) != -1) 
+                                                                ( Number(allowDayChoose.findIndex((e)=> String(e.day) === String(item) && String(e.month) === String(monthIntern) && String(e.year) === String(yearIntern))) !== -1) 
                                                                 && compareTwoDate({day:item,month:monthIntern,year:yearIntern},today)
                                                                 && arrayDayUnAvailability 
-                                                                &&(arrayDayUnAvailability.findIndex((e)=> e.day == item && e.month == monthIntern && e.year == yearIntern) == -1)
+                                                                &&( Number(arrayDayUnAvailability.findIndex((e)=> String(e.day) === String(item) && String(e.month) === String(monthIntern) && String(e.year) === yearIntern)) === -1)
                                                               )  ? (
                                                                   <div onClick={()=>ChooseDayToBookRoom({day:item,month:monthIntern,year:yearIntern})} style={{backgroundColor:"rgba(46, 98, 244, 0.2)"}} className="Canlerdal_day_ele">
                                                                       {item}
@@ -348,9 +348,9 @@ const Canlerdal = ({month,year,arrayDayUnAvailability,handleChangeDayUnAvailabil
                                         <>
                                             { 
                                                     (
-                                                      (arrayDayChoose.findIndex((e)=> e.day == item && e.month == monthIntern && e.year == yearIntern) != -1)
+                                                      (Number(arrayDayChoose.findIndex((e)=> String(e.day) === String(item) && String(e.month) === String(monthIntern) && String(e.year) === String(yearIntern))) !== -1)
                                                       && arrayDayUnAvailability 
-                                                      &&(arrayDayUnAvailability.findIndex((e)=> e.day == item && e.month == monthIntern && e.year == yearIntern) == -1)
+                                                      &&(Number(arrayDayUnAvailability.findIndex((e)=> String(e.day) === String(item) && String(e.month) === String(monthIntern) && String(e.year) === String(yearIntern))) === -1)
                                                     )  ? (
                                                         <div onClick={()=>{setAllowDayChoose([]);setArrayDayChoose([])}} 
                                                              style={{backgroundColor:"rgba(255, 71, 67, 0.7)"}} 

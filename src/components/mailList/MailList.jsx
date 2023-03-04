@@ -11,12 +11,12 @@ const MailList = () => {
   const { user } = useContext(AuthContext);
   const handleOpenChat = async (userId)=>{
     try{
-      if(user._id != userId){
+      if(String(user._id) !== String(userId)){
           dispatchredux({type: "OPENCLOSECHAT", payload: { status:true }});
           axios.post(`${url()}/conversations/getListConvByUserId`,{userId:user._id}).then((res)=>{
             if(res && res.data && res.data.data){
               dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
-              dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> e.unReader == 1).length }});
+              dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
             }
           }).catch((e)=>{
             console.log(e)
@@ -30,8 +30,8 @@ const MailList = () => {
           });
           
           if(response && response.data && response.data.data){
-              if(Data.listConv.find((e)=>e._id == response.data.data._id)){
-                  dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=>e._id == response.data.data._id) }});
+              if(Data.listConv.find((e)=>String(e._id) === String(response.data.data._id))){
+                  dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=>String(e._id) === String(response.data.data._id)) }});
                   dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                   axios.post(`${url()}/conversations/LoadMessage`,{
                     conversationId:response.data.data._id,
@@ -51,7 +51,7 @@ const MailList = () => {
                   });
               }
               else{
-                  dataConv.memberList = [response.data.data.memberList.find((e)=>e.memberId != user._id)];
+                  dataConv.memberList = [response.data.data.memberList.find((e)=>String(e.memberId) !== String(user._id))];
                   dataConv.messageList = response.data.data.messageList;
                   dataConv.timeLastMessage= response.data.data.messageList[0].createAt;
                   dataConv.unReader =0;
