@@ -25,7 +25,7 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import {url} from '../../config.js'
 import {socketCient} from '../../config.js'
-// import {BottomScrollListener} from 'react-bottom-scroll-listener';
+import SendIcon from '@mui/icons-material/Send';
 const Header = ({ type }) => {
   let socket = socketCient();
   const { user } = useContext(AuthContext);
@@ -712,7 +712,7 @@ const Header = ({ type }) => {
                               <input 
                                     onChange={(e)=>{setMessToSend(e.target.value)}}
                                     value = {messToSend}
-                                    onKeyPress={(e) => SendMessage(e)} 
+                                    onKeyDown ={(e) => SendMessage(e)} 
                                     className="message-box-input" type="text" />
                           </div>
                     </div>
