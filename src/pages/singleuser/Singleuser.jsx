@@ -12,11 +12,15 @@ import { AuthContext } from "../../context/AuthContext";
 import { useDropzone } from "react-dropzone"
 import axios from "axios";
 import {url} from '../../config.js'
-import {socketCient} from '../../config.js'
+// import {socketCient} from '../../config.js'
+import {useSelector,useDispatch} from 'react-redux'
+import{SearchDataSelector} from '../../redux/selector'
 const Singleuser = () => {
   // let socket = socketCient();
+  const Data = useSelector(SearchDataSelector);
+  const dispatchredux = useDispatch();  
   const { user } = useContext(AuthContext);
-  const { loading, error, dispatch } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext);
   // chỉ hiển thị thông tin về khách sạn và loại phòng 
   const navigate = useNavigate();
   const location = useLocation(); 
@@ -302,6 +306,81 @@ const Singleuser = () => {
     }
   }); 
   
+  const handleOpenChat = async (userId)=>{
+    try{
+      if(String(user._id) !== String(userId)){
+          dispatchredux({type: "OPENCLOSECHAT", payload: { status:true }});
+          axios.post(`${url()}/conversations/getListConvByUserId`,{userId:user._id}).then((res)=>{
+            if(res && res.data && res.data.data){
+              dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
+              dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
+            }
+          }).catch((e)=>{
+            console.log(e)
+          })
+          let dataConv ={};
+          let response = await axios.post(`${url()}/conversations/CreateConv`,{
+            senderId:user._id,
+            receiverId:userId,
+            isDevide:true,
+            loaded:0
+          });
+          
+          if(response && response.data && response.data.data){
+              if(Data.listConv.find((e)=>String(e._id) === String(response.data.data._id))){
+                  dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=>String(e._id) === String(response.data.data._id)) }});
+                  dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
+                  axios.post(`${url()}/conversations/LoadMessage`,{
+                    conversationId:response.data.data._id,
+                    userId:user._id,
+                    isDevide:true,
+                    loaded:0
+                  }).then((res)=>{
+                      if(res.data && res.data.data){
+                        let arr_messages = [];
+                        for(let i=res.data.data.length-1; i>=0; i--){
+                          arr_messages.push(res.data.data[i])
+                        };
+                        dispatchredux({type: "LISTMESS", payload: { listMess:arr_messages }});
+                      }
+                  }).catch((e)=>{
+                    console.log(e)
+                  });
+              }
+              else{
+                  dataConv.memberList = [response.data.data.memberList.find((e)=>String(e.memberId) !== String(user._id))];
+                  dataConv.messageList = response.data.data.messageList;
+                  dataConv.timeLastMessage= response.data.data.messageList[0].createAt;
+                  dataConv.unReader =0;
+                  dataConv._id = response.data.data._id;
+                  dispatchredux({type: "ADDCONV", payload: { newConv:dataConv }});
+                  dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:dataConv }});
+                  dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
+                  axios.post(`${url()}/conversations/LoadMessage`,{
+                    conversationId:response.data.data._id,
+                    userId:user._id,
+                    isDevide:true,
+                    loaded:0
+                  }).then((res)=>{
+                      if(res.data && res.data.data){
+                        let arr_messages = [];
+                        for(let i=res.data.data.length-1; i>=0; i--){
+                          arr_messages.push(res.data.data[i])
+                        };
+                        dispatchredux({type: "LISTMESS", payload: { listMess:arr_messages }});
+                      }
+                  }).catch((e)=>{
+                    console.log(e)
+                  });
+              }
+          }
+      }
+    }
+    catch(e){
+       console.log(e)
+    }
+  }
+
   const sendCommentEnter = (e)=>{
     try{
       if (e.key === "Enter") {
@@ -324,7 +403,7 @@ const Singleuser = () => {
         <div className="top">
           <div className="left">
             <div onClick={()=>setOpenEditForm(true)} className="editButton">Edit</div>
-            <h1 className="title">Information</h1>
+            <h1 className="title">Informations</h1>
             {
               (path === "users") &&(
                   (data !== {}) && (
@@ -359,6 +438,16 @@ const Singleuser = () => {
                                   {`${new Date(data.createdAt).getDate()}/${new Date(data.createdAt).getMonth()+1}/${new Date(data.createdAt).getFullYear()}`}
                               </span>
                             </div>
+                            {
+                              (String(user._id) !== String(id)) && (
+                                <div className="detailItem"  onClick={()=>handleOpenChat(id)} >
+                                  <span className="itemKey">Chat with me</span>
+                                  <span className="itemValue">
+                                  </span>
+                                </div>
+                              )
+                            }
+
                             <div className="detailItem">
                               <span className="itemKey">Phone:</span>
                               <span className="itemValue">
@@ -366,11 +455,12 @@ const Singleuser = () => {
                               </span>
                             </div>
                             <div className="detailItem">
-                              <span className="itemKey">Admin:</span>
+                              <span className="itemKey">Ad:</span>
                               <span className="itemValue">
                                   {data.isAdmin ? "Yes" :"No"}
                               </span>
                             </div>
+                            
                            {
                              (id == user._id) && (
                               <div 
