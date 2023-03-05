@@ -36,12 +36,12 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
   }
   useEffect(() => {
     socket.on("editcomment",(comment,type)=>{
-        if( (String(location.pathname.split("/")[1]) === "hotels") && (type == "hotels") ){
-           if(comment && comment._id && (comment._id == idComment) && comment.emotion   && (!comment.roomId) && (!comment.userIdHostPage) 
-              && comment.hotelId && (comment.hotelId == id)){
+        if( (String(location.pathname.split("/")[1]) === "hotels") && (String(type) === "hotels") ){
+           if(comment && comment._id && (String(comment._id) === idComment) && comment.emotion   && (!comment.roomId) && (!comment.userIdHostPage) 
+              && comment.hotelId && (String(comment.hotelId) === String(id))){
                 if(comment.emotion.length){
                     setListUserLikeId(comment.emotion.filter( e => Number(String(e).length) === 24));
-                    if((!imgsource) && (imgsource.trim()== "")){
+                    if((!imgsource) && ( String(imgsource.trim()) === "")){
                         axios.get(`${url()}/users/${userIdCommented}`).then((res)=>{
                             if(res && res.data){
                                 setLinkImgUserComment(res.data.img)
@@ -54,12 +54,12 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
                 }
            }
         }
-        else if( (String(location.pathname.split("/")[1]) === "rooms") && (type == "rooms") ){
-            if(comment && comment._id && (comment._id == idComment) && comment.emotion   && (comment.roomId) && (!comment.userIdHostPage) 
-               && comment.hotelId && (comment.roomId == id)){
+        else if( (String(location.pathname.split("/")[1]) === "rooms") && ( String(type) === "rooms") ){
+            if(comment && comment._id && (String(comment._id) === idComment) && comment.emotion   && (comment.roomId) && (!comment.userIdHostPage) 
+               && comment.hotelId && (String(comment.roomId) === id)){
                  if(comment.emotion.length){
                      setListUserLikeId(comment.emotion.filter( e => Number(String(e).length) === 24));
-                     if((!imgsource) && (imgsource.trim()== "")){
+                     if((!imgsource) && (String(imgsource.trim()) === "")){
                          axios.get(`${url()}/users/${userIdCommented}`).then((res)=>{
                              if(res && res.data){
                                  setLinkImgUserComment(res.data.img)
@@ -73,7 +73,7 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
             }
         }
       })
-    },[])
+    },[id,idComment,imgsource,location.pathname,userIdCommented,socket])
   const LikeDislike = (status) =>{
     if(String(typeComment) === "hotels"){
         axios.post(`${url()}/comments/LikeDislikeCommentHotel`,{userId:hostId,commentId:idComment,status}).then((res,err)=>{
@@ -86,18 +86,18 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
                         setLikeStatus(true);
                         setListUserLikeId(current => [...current, String(hostId)]);
                         if(res.data.data.updatedLikeCommentHotel){
-                            socket.emit("editcomment",listUserCare.filter((e)=> e!= hostId),res.data.data.updatedLikeCommentHotel,"hotels");
+                            socket.emit("editcomment",listUserCare.filter((e)=> String(e) !== hostId),res.data.data.updatedLikeCommentHotel,"hotels");
                         }
                     }
                     else{
                         setLikeStatus(false);
                         setListUserLikeId(listUserLikeId.filter(e=> String(e) !== String(hostId)));
                         if(res.data.data.updatedDisLikeCommentHotel){
-                            socket.emit("editcomment",listUserCare.filter((e)=> e!= hostId),res.data.data.updatedDisLikeCommentHotel,"hotels");
+                            socket.emit("editcomment",listUserCare.filter((e)=> String(e) !== hostId),res.data.data.updatedDisLikeCommentHotel,"hotels");
                         }
                     }
                 }
-                socket.emit("editcomment",listUserCare.filter((e)=> e!= hostId),res.data.data.updatedLikeCommentHotel,"hotels");
+                socket.emit("editcomment",listUserCare.filter((e)=> String(e) !== hostId),res.data.data.updatedLikeCommentHotel,"hotels");
             }
         });
     }
@@ -112,14 +112,14 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
                         setLikeStatus(true);
                         setListUserLikeId(current => [...current, String(hostId)]);
                         if(res.data.data.updatedLikeCommentHotel){
-                            socket.emit("editcomment",listUserCare.filter((e)=> e!= hostId),res.data.data.updatedLikeCommentHotel,"rooms");
+                            socket.emit("editcomment",listUserCare.filter((e)=> String(e) !== String(hostId)),res.data.data.updatedLikeCommentHotel,"rooms");
                         }
                     }
                     else{
                         setLikeStatus(false);
                         setListUserLikeId(listUserLikeId.filter(e=> String(e) !== String(hostId)));
                         if(res.data.data.updatedDisLikeCommentHotel){
-                            socket.emit("editcomment",listUserCare.filter((e)=> e!= hostId),res.data.data.updatedDisLikeCommentHotel,"rooms");
+                            socket.emit("editcomment",listUserCare.filter((e)=> String(e) !== hostId),res.data.data.updatedDisLikeCommentHotel,"rooms");
                         }
                     }
                 }
@@ -169,12 +169,12 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
   }
   const handleOpenChat = async (userId)=>{
      try{
-        if(hostId != userId){
+        if(String(hostId) !== String(userId)){
             dispatchredux({type: "OPENCLOSECHAT", payload: { status:true }});
             axios.post(`${url()}/conversations/getListConvByUserId`,{userId:hostId}).then((res)=>{
               if(res && res.data && res.data.data){
                 dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
-                dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> e.unReader == 1).length }});
+                dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
               }
             }).catch((e)=>{
               console.log(e)
@@ -185,8 +185,8 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
               receiverId:userId
             });
             if(response && response.data && response.data.data){
-                if(Data.listConv.find((e)=>e._id == response.data.data._id)){
-                    dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=>e._id == response.data.data._id) }});
+                if(Data.listConv.find((e)=> String(e._id) === String(response.data.data._id))){
+                    dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=> String(e._id) === String(response.data.data._id)) }});
                     dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                     axios.post(`${url()}/conversations/LoadMessage`,{
                       conversationId:response.data.data._id,
@@ -206,7 +206,7 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
                     });
                 }
                 else{
-                    dataConv.memberList = [response.data.data.memberList.find((e)=>e.memberId != hostId)];
+                    dataConv.memberList = [response.data.data.memberList.find((e)=> String(e.memberId) !== hostId)];
                     dataConv.messageList = response.data.data.messageList;
                     dataConv.timeLastMessage= response.data.data.messageList[0].createAt;
                     dataConv.unReader =0;
@@ -244,6 +244,11 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
     setcommentToEdit(idComment);
     handleEditValueFormComment(content);
   }
+
+  const imageOnError = (event) => {
+    event.currentTarget.src = BrokenImage;
+  };
+  const BrokenImage ="https://dvdn247.net/wp-content/uploads/2020/07/avatar-mac-dinh-1.png";
   return (
     // nếu lấy dũ liệu từ event mới có đối số từ event truyền vào 
     <div 
@@ -278,7 +283,7 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
         <div className="header_commentEle">
            <Link to={`/users/${userIdCommented}`} style={{textDecoration:"none"}}>
                 <span className="header_commentEle_child">
-                    <img className="img_commentEle" src={linkImgUserComment} alt={nameuser} />
+                    <img className="img_commentEle" src={linkImgUserComment} alt={nameuser} onError={imageOnError} />
                         <div className="name">
                             {nameuser}
                         </div>
@@ -329,7 +334,7 @@ const Comment = ({idComment,nameuser,imgsource,content,time,listUserLike,hostSta
                                                     <div className="user_data_ele_liked_name">
                                                         {userData.username}
                                                     </div>
-                                                    <img className="user_data_ele_liked_img" alt={userData.username} src={userData.img}/>
+                                                    <img className="user_data_ele_liked_img" alt={userData.username} src={userData.img} onError={imageOnError}/>
                                                 </Link>
                                             </div>
                                         )

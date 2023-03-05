@@ -58,19 +58,19 @@ const Hotel = () => {
   const [openListService,setOpenListService] = useState(false);
   const [listService,setListService] = useState([])
   
-  const { data, loading, error } = useFetch(`${url()}/hotels/find/${id}`);
+  const { data, loading } = useFetch(`${url()}/hotels/find/${id}`);
   const [dataHost,setDataHost] = useState({})
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   
-  const {date,options} = useSelector(SearchDataSelector);  // lấy dữ liệu tìm kiếm từ trong redux 
+  //const {date,options} = useSelector(SearchDataSelector);  // lấy dữ liệu tìm kiếm từ trong redux 
   //console.log("Dữ liệu từ context",{date,options});
-  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
-  function dayDifference(date1, date2) {
-    const timeDiff = Math.abs(date2.getTime() - date1.getTime()); // trả về giá trị tuyểh đoois 
-    const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY); // làm tròn thành ngày 
-    return diffDays; // tính ra khoảng thời gian du lịch 
-  }
+  // const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  // function dayDifference(date1, date2) {
+  //   const timeDiff = Math.abs(date2.getTime() - date1.getTime()); // trả về giá trị tuyểh đoois 
+  //   const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY); // làm tròn thành ngày 
+  //   return diffDays; // tính ra khoảng thời gian du lịch 
+  // }
 
   useEffect(() => {
     const takeData= async ()=>{ 

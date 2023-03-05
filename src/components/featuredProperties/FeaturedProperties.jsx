@@ -3,7 +3,7 @@ import useFetch from "../../hooks/useFetch";
 import {url} from '../../config.js'
 const FeaturedProperties = () => {
   // lấy ra danh sách khách sạn theo đặc điểm và có giới hạn số lượng 
-  const { data, loading, error } = useFetch(`${url()}/hotels?featured=true&limit=4`);
+  const { data, loading} = useFetch(`${url()}/hotels?featured=true&limit=4`);
   return (
     <div className="fp">
       {loading ? (

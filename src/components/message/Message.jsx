@@ -33,13 +33,13 @@ const Message = ({dataMess,dataConv}) => {
             }
         }}
         style={isDeleted ? {display:"none"} : {}}
-        className={(dataMess.senderId != user._id) ? 'message' : 'message right'} >
+        className={(String(dataMess.senderId) !== String(user._id)) ? 'message' : 'message right'} >
         <div className="sender_infor">
             {
-              (dataMess.senderId != user._id) && (
+              ( String(dataMess.senderId) !== String(user._id)) && (
                 <>
                     <div className="img_sender">
-                        <img src={dataConv.memberList[0].imguser} onError={imageOnErrorHotel}/>
+                        <img src={dataConv.memberList[0].imguser} onError={imageOnErrorHotel} alt=""/>
                     </div>
                     <div className="sender_name">
                         {dataConv.memberList[0].nameuser}

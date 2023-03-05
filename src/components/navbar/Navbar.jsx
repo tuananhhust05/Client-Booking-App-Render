@@ -1,13 +1,12 @@
 import "./navbar.css";
 
-import { useLocation, useNavigate,Link } from "react-router-dom";
-import axios from 'axios'
-import { useEffect, useState,useContext } from "react";
-import {useSelector} from 'react-redux'
-import{SearchDataSelector} from '../../redux/selector' // mỗi lần dịch là thay đổi folder cha hiện tại 
+import { Link } from "react-router-dom";
+import {useContext } from "react";
+// import {useSelector} from 'react-redux'
+// import{SearchDataSelector} from '../../redux/selector' // mỗi lần dịch là thay đổi folder cha hiện tại 
 import { AuthContext } from "../../context/AuthContext";
-import {url} from '../../config.js'
-import {socketCient} from '../../config.js'
+// import {url} from '../../config.js'
+// import {socketCient} from '../../config.js'
 const NavBar = () => {
   
   const { user } = useContext(AuthContext);

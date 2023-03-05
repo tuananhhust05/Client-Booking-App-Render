@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import RawOnIcon from '@mui/icons-material/RawOn';
 import MoodIcon from '@mui/icons-material/Mood';
-import FmdGoodIcon from '@mui/icons-material/FmdGood';
+// import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import EditIcon from '@mui/icons-material/Edit';
 import {useSelector,useDispatch} from 'react-redux'
@@ -71,25 +71,25 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
     };
   const handleOpenChat = async (userId)=>{
         try{
-            if(user._id != userId){
+            if(String(user._id) !== String(userId)){
                 dispatchredux({type: "OPENCLOSECHAT", payload: { status:true }});
                 axios.post(`${url()}/conversations/getListConvByUserId`,{userId:user._id}).then((res)=>{
                 if(res && res.data && res.data.data){
                     dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
-                    dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> e.unReader == 1).length }});
+                    dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
                 }
                 }).catch((e)=>{
-                console.log(e)
+                   console.log(e)
                 })
                 let dataConv ={};
                 let response = await axios.post(`${url()}/conversations/CreateConv`,{
-                senderId:user._id,
-                receiverId:userId
+                    senderId:user._id,
+                    receiverId:userId
                 });
                 
                 if(response && response.data && response.data.data){
-                    if(Data.listConv.find((e)=>e._id == response.data.data._id)){
-                        dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=>e._id == response.data.data._id) }});
+                    if(Data.listConv.find((e)=>String(e._id) === String(response.data.data._id))){
+                        dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=>String(e._id) === String(response.data.data._id)) }});
                         dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                         axios.post(`${url()}/conversations/LoadMessage`,{
                         conversationId:response.data.data._id,
@@ -107,7 +107,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                         });
                     }
                     else{
-                        dataConv.memberList = [response.data.data.memberList.find((e)=>e.memberId != user._id)];
+                        dataConv.memberList = [response.data.data.memberList.find((e)=>String(e.memberId) !== String(user._id))];
                         dataConv.messageList = response.data.data.messageList;
                         dataConv.timeLastMessage= response.data.data.messageList[0].createAt;
                         dataConv.unReader =0;
@@ -139,7 +139,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
         }
   const sendComment = async (e)=>{
     try{
-        if (e.key === "Enter") {
+        if (String(e.key) === "Enter") {
             let comment = {
                 IdPost:dataPost._id,
                 content:contentComment,
@@ -265,7 +265,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
   }
   const handleOpenSetting = ()=>{
     try{
-        if(dataPost.UserId == user._id){
+        if(String(dataPost.UserId) === user._id){
             setOpenSettingPost(true)
         }
     }
@@ -360,7 +360,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                     }}
                             className="post_ele_header_user_info" to={`/users/${dataPost.UserId}`}>
                                 <div className="post_ele_header_user_info_img">
-                                    <img src={dataPost.LinkImgUserCreate} onError={imageOnErrorHotel}/>
+                                    <img src={dataPost.LinkImgUserCreate} onError={imageOnErrorHotel} alt=""/>
                                 </div>
                                 <div style={{textDecoration:"none"}} className="post_ele_header_user_info_name">
                                     {dataPost.UserName} 
@@ -372,7 +372,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                     </div>
                     <div className="Post_ele_option">
                         {
-                            (dataPost.EmotionAuthor && (dataPost.EmotionAuthor.trim()!="") && (dataPost.ListPeopleTag.length > 1)) && (
+                            (dataPost.EmotionAuthor && ( String(dataPost.EmotionAuthor.trim()) !== "") && (dataPost.ListPeopleTag.length > 1)) && (
                                 <div className="Post_ele_option_wrapper" >
                                     <div className="Post_ele_option_wrapper_1" >
                                         Feeling {emotion} with
@@ -408,10 +408,10 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                             openListUserTag && (
                                                 <div className="List_user_tag">
                                                     <div className="list_user_tag_tempt">
-                                                            {dataPost.ListPeopleTag.filter((e)=>e.userId != dataPost.ListPeopleTag[0].userId).map((obj,index)=>(
+                                                            {dataPost.ListPeopleTag.filter((e)=> String(e.userId) !== String(dataPost.ListPeopleTag[0].userId)).map((obj,index)=>(
                                                                     <div className="user_tag_ele" key={index}>
                                                                         <Link className="user_tag_ele_link_wrapper" to={`/users/${obj.userId}`}>
-                                                                            <img className="user_tag_ele_img" src={obj.img} onError={imageOnErrorHotel} />
+                                                                            <img className="user_tag_ele_img" src={obj.img} onError={imageOnErrorHotel} alt="" />
                                                                             <div className="user_tag_ele_username"> 
                                                                                     {obj.username}
                                                                             </div>
@@ -430,7 +430,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                             )
                         }
                         {
-                            (dataPost.EmotionAuthor && (dataPost.EmotionAuthor.trim()!="") && (dataPost.ListPeopleTag.length == 1)) && (
+                            (dataPost.EmotionAuthor && ( String(dataPost.EmotionAuthor.trim()) !=="") && (Number(dataPost.ListPeopleTag.length) === 1)) && (
                                 <div className="Post_ele_option_wrapper" >
                                     <div className="Post_ele_option_wrapper_1" >
                                         Feeling {dataPost.EmotionAuthor} with
@@ -444,7 +444,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                             )
                         }
                         {
-                            (dataPost.EmotionAuthor && (dataPost.EmotionAuthor.trim()!="")  && (dataPost.ListPeopleTag.length == 0)) && (
+                            (dataPost.EmotionAuthor && (String(dataPost.EmotionAuthor.trim()) !== "")  && ( Number(dataPost.ListPeopleTag.length) === 0)) && (
                                 <div className="Post_ele_option_wrapper" >
                                     <div className="Post_ele_option_wrapper_1" >
                                         Feeling {dataPost.EmotionAuthor} 
@@ -453,7 +453,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                             )
                         }
                         {
-                            (((!dataPost.EmotionAuthor) || (dataPost.EmotionAuthor.trim()=="") ) && (dataPost.ListPeopleTag.length == 1)) && (
+                            (((!dataPost.EmotionAuthor) || ( String(dataPost.EmotionAuthor.trim()) === "") ) && (Number(dataPost.ListPeopleTag.length) === 1)) && (
                                 <div className="Post_ele_option_wrapper" >
                                 <div className="Post_ele_option_wrapper_2" >
                                         <Link to={`/users/${dataPost.ListPeopleTag[0].userId}`} style={{textDecoration: "none"}}>
@@ -464,7 +464,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                             )
                         }
                         {
-                            (((!dataPost.EmotionAuthor) || (dataPost.EmotionAuthor.trim()=="") ) && (dataPost.ListPeopleTag.length > 1)) && (
+                            (((!dataPost.EmotionAuthor) || ( String(dataPost.EmotionAuthor.trim()) === "") ) && (dataPost.ListPeopleTag.length > 1)) && (
                                 <div className="Post_ele_option_wrapper" >
                                     <div className="Post_ele_option_wrapper_2" >
                                         <Link to={`/users/${dataPost.ListPeopleTag[0].userId}`} style={{textDecoration: "none"}}>
@@ -494,10 +494,10 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                             openListUserTag && (
                                                 <div className="List_user_tag">
                                                     <div className="list_user_tag_tempt">
-                                                            {dataPost.ListPeopleTag.filter((e)=>e.userId != dataPost.ListPeopleTag[0].userId).map((obj,index)=>(
+                                                            {dataPost.ListPeopleTag.filter((e)=> String(e.userId) !== String(dataPost.ListPeopleTag[0].userId)).map((obj,index)=>(
                                                                     <div className="user_tag_ele" key={index}>
                                                                         <Link className="user_tag_ele_link_wrapper" to={`/users/${obj.userId}`}>
-                                                                            <img className="user_tag_ele_img" src={obj.img} onError={imageOnErrorHotel} />
+                                                                            <img className="user_tag_ele_img" src={obj.img} onError={imageOnErrorHotel} alt=""/>
                                                                             <div className="user_tag_ele_username">
                                                                                     {obj.username}
                                                                             </div>
@@ -556,20 +556,20 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                     <hr  width="100%" align="center" />
                     <div className="post_ele_img">
                         {
-                            ((dataPost.ListImg.length != 1) && (dataPost.ListImg.length != 0)) && (
+                            (( Number(dataPost.ListImg.length) !== 1) && ( Number(dataPost.ListImg.length) !== 0)) && (
                                 <div className="post_ele_img1">
                                     {
                                         (dataPost.ListImg.length > 0)?(
-                                            <img  onError={imageOnError} src={dataPost.ListImg[0]}/>
+                                            <img  onError={imageOnError} src={dataPost.ListImg[0]} alt=""/>
                                         ):(
-                                            <img  onError={imageOnError} src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-5.jpg"/>
+                                            <img  onError={imageOnError} src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-5.jpg" alt=""/>
                                         )
                                     }
                                 </div>
                             )
                         }
                         {
-                            (dataPost.ListImg.length != 0) && (
+                            (Number(dataPost.ListImg.length) !== 0) && (
                                 <div onClick={()=>setOpenListImg(true)} className="post_ele_img2">
                                     {
                                         (dataPost.ListImg.length >1) && (
@@ -591,14 +591,14 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                     }
                                     {
                                         (dataPost.ListImg.length >1) ?(
-                                            <img src={dataPost.ListImg[1]}/>
+                                            <img src={dataPost.ListImg[1]} alt=""/>
                                         ):(
                                             <>
                                             {
-                                                (dataPost.ListImg.length == 1) ?(
-                                                    <img  onError={imageOnError} src={dataPost.ListImg[0]}/>
+                                                (Number(dataPost.ListImg.length) === 1) ?(
+                                                    <img  onError={imageOnError} src={dataPost.ListImg[0]} alt="" />
                                                 ):(
-                                                    <img  onError={imageOnError} src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-5.jpg"/>
+                                                    <img  onError={imageOnError} src="https://img.meta.com.vn/Data/image/2022/01/13/anh-dep-thien-nhien-5.jpg" alt=""/>
                                                 )
                                             }
                                             </>
@@ -737,7 +737,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
                                     {
                                         dataPost.ListImg.map(imgSource=>
                                             ( <div key={imgSource} className="img_listImage_wrapper">
-                                                <img  onError={imageOnError} src={imgSource} className="img_listImage"/>
+                                                <img  onError={imageOnError} src={imgSource} className="img_listImage" alt=""/>
                                             </div>
                                             )
                                         )

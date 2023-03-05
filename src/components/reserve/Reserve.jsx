@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import "./reserve.css";
 import useFetch from "../../hooks/useFetch";
-import { useContext, useState } from "react";
+import { useState } from "react";
 //import { SearchContext } from "../../context/SearchContext";
 import {useSelector} from 'react-redux'
 import{SearchDataSelector} from '../../redux/selector' // mỗi lần dịch là thay đổi folder cha hiện tại 
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import {url} from '../../config.js'
 const Reserve = ({ setOpen, hotelId }) => {
   const [selectedRooms, setSelectedRooms] = useState([]);
-  const { data, loading, error } = useFetch(`${url()}/hotels/room/${hotelId}`); // dữ liệu về các phòng cửa 1 khách sạn 
+  const { data} = useFetch(`${url()}/hotels/room/${hotelId}`); // dữ liệu về các phòng cửa 1 khách sạn 
   console.log(data);
   const { date } = useSelector(SearchDataSelector); // lấy dữ liệu từ context 
   

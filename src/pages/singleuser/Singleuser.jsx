@@ -312,6 +312,11 @@ const Singleuser = () => {
       console.log(e)
     }
   }
+
+  const BrokenImage ="https://dvdn247.net/wp-content/uploads/2020/07/avatar-mac-dinh-1.png";
+  const imageOnError = (event) => {
+    event.currentTarget.src = BrokenImage;
+  };
   return (
     <div className="single">
       <Header type="list" />
@@ -328,6 +333,7 @@ const Singleuser = () => {
                             src={data.img ? data.img : ""}
                             alt=""
                             className="itemImg"
+                            onError = {imageOnError}
                           />
                           <div className="details">
                             <h1 className="itemTitle">{data.username}</h1>

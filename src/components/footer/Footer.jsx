@@ -41,7 +41,7 @@ const Footer = () => {
       </div>
       <div className="fText">Copyright © 2022 TravelComunity.</div>
       <img src="https://cdn.pixabay.com/photo/2015/01/28/23/10/mosque-615415__340.jpg"
-           className="Image_footer"
+           className="Image_footer" alt=""
       />
     </div>
   );
