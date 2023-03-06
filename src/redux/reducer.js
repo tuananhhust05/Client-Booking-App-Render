@@ -32,10 +32,10 @@ const SearchReducerRedux = (state =INITIAL_STATE, action) => {  // state lấy m
       case "ADDMESS":
         return { 
           ...state, 
-          listMess: (state.chatMode && state.conversationChosen._id && (state.conversationChosen._id == action.payload.newMess.conversationId)) ? [action.payload.newMess,...state.listMess] : state.listMess,
-          countConversationUnreader: (state.chatMode && state.conversationChosen._id && (state.conversationChosen._id == action.payload.newMess.conversationId)) ? state.countConversationUnreader : (state.countConversationUnreader + 1),
+          listMess: (state.chatMode && state.conversationChosen._id && ( String(state.conversationChosen._id) === String(action.payload.newMess.conversationId))) ? [action.payload.newMess,...state.listMess] : state.listMess,
+          countConversationUnreader: (state.chatMode && state.conversationChosen._id && ( String(state.conversationChosen._id) === String(action.payload.newMess.conversationId))) ? state.countConversationUnreader : (state.countConversationUnreader + 1),
           listConv: state.listConv.map(
-            (conv, i) => conv._id == action.payload.newMess.conversationId ? 
+            (conv, i) => String(conv._id) === String(action.payload.newMess.conversationId) ? 
                                      {
                                        unReader:1,
                                        _id:action.payload.newMess.conversationId,
@@ -87,7 +87,7 @@ const SearchReducerRedux = (state =INITIAL_STATE, action) => {  // state lấy m
         return { 
           ...state, 
           listConv: state.listConv.map(
-            (conv, i) => conv._id == action.payload.idconv ? action.payload.updateConv
+            (conv, i) => String(conv._id) === String(action.payload.idconv) ? action.payload.updateConv
                                     : conv
           )
         }
@@ -118,7 +118,7 @@ const SearchReducerRedux = (state =INITIAL_STATE, action) => {  // state lấy m
           ...state, 
           status:"Thành công",
           listOrder: state.listOrder.map(
-            (order, i) => order._id == action.payload.IdOrder ? {...order, Status: action.payload.Status}
+            (order, i) => String(order._id) === String(action.payload.IdOrder) ? {...order, Status: action.payload.Status}
                                     : order
           )
         } 
@@ -137,7 +137,7 @@ const SearchReducerRedux = (state =INITIAL_STATE, action) => {  // state lấy m
         return { 
           ...state, 
           listNotification: state.listNotification.map(
-            (notification, i) => notification._id == action.payload.idNotify ? {...notification, Status: 0}
+            (notification, i) => String(notification._id) === String(action.payload.idNotify) ? {...notification, Status: 0}
                                     : notification
           )
         }

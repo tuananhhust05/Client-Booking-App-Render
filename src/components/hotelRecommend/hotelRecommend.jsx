@@ -11,7 +11,7 @@ const HotelRecommend = () => {
   useEffect(() => {
     const takeData= async()=>{ 
         axios.get(`${url()}/hotels/TakeHotelRecommend/${user._id}`).then((response)=>{
-            console.log(response);
+            // console.log(response);
             if(response && response.data && response.data.data){
                 setListHotelRecommend(response.data.data);
             }

@@ -14,7 +14,7 @@ import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 import AutoModeIcon from '@mui/icons-material/AutoMode';
-import { useLocation, useNavigate,Link } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import axios from 'axios'
 import { useEffect, useState,useContext } from "react";
 import { useDropzone } from "react-dropzone"
@@ -22,14 +22,14 @@ import {useSelector} from 'react-redux'
 import{SearchDataSelector} from '../../redux/selector' // mỗi lần dịch là thay đổi folder cha hiện tại 
 import { AuthContext } from "../../context/AuthContext";
 import {url} from '../../config.js'
-import {socketCient} from '../../config.js'
+// import {socketCient} from '../../config.js'
 import {BottomScrollListener} from 'react-bottom-scroll-listener';
 const Post = () => {
-  let socket = socketCient();
+  // let socket = socketCient();
   const { user } = useContext(AuthContext);
   const location = useLocation();
   const id = location.pathname.split("/")[2]; // lấy id truyền vào bằng đường link từ components search 
-  const path = location.pathname.split("/")[1];
+  // const path = location.pathname.split("/")[1];
   const [loading,setLoading] = useState(true);
   const [listPost,setListPost] = useState([]);
   const [mode,setMode] = useState("");
@@ -74,7 +74,7 @@ const Post = () => {
     const takeData= async ()=>{
 
           let arrayIdBaned = [];
-
+          // console.log(listPostIdBaned);
           // load by cityName 
           let response = await axios.post(`${url()}/posts/GetListPost/HistoryOrder`,{history:Data.listOrder,skip:skipStateCityName})
           // console.log("Dữ liệu bài post dựa trên dữ liệu cityName; CityName lấy từ historyOrder",response);
@@ -121,11 +121,11 @@ const Post = () => {
             ListPostBaned:arrayIdBaned,
             skip:skipStateLoadPostRandom
           })
-          console.log("bài post luồng random",response3.data.data);
+          // console.log("bài post luồng random",response3.data.data);
           setLoading(false);
           if(response3 && response3.data && response3.data.data && response3.data.data.length && (response3.data.data.length>0)){
             if(response3.data.data.length < 5){
-                console.log("Dừng luồng random",response3.data.data.length);
+                // console.log("Dừng luồng random",response3.data.data.length);
                 setStopLoadPostRandomPostBan(true);
             }
             else{
@@ -148,12 +148,12 @@ const Post = () => {
     catch(e){
       console.log(e);
     }
-  },[])
+  },[Data.listOrder,listPostIdBaned,skipStateCityName,skipStateHotelName,skipStateLoadPostRandom])
   
 
   const handleChangeMode = async (mode)=>{
     try{
-        if(mode == "My Post"){
+        if(String(mode) === "My Post"){
           axios.get(`${url()}/posts/GetListPostByUserId/${id}`).then((res)=>{
             if(res && res.data && res.data.data){
                 setListPost(res.data.data);
@@ -169,7 +169,7 @@ const Post = () => {
            console.log(e)
           })
         }
-        else if(mode == "Random"){
+        else if(String(mode) === "Random"){
            // load lại như lúc ban đầu 
 
           setListPost([]);
@@ -221,11 +221,11 @@ const Post = () => {
             ListPostBaned:arrayIdBaned,
             skip:skipStateLoadPostRandom
           })
-          console.log("bài post luồng random",response3.data.data);
+          // console.log("bài post luồng random",response3.data.data);
           setLoading(false);
           if(response3 && response3.data && response3.data.data && response3.data.data.length && (response3.data.data.length>0)){
             if(response3.data.data.length < 5){
-                console.log("Dừng luồng random",response3.data.data.length);
+                // console.log("Dừng luồng random",response3.data.data.length);
                 setStopLoadPostRandomPostBan(true);
             }
             else{
@@ -277,7 +277,7 @@ const Post = () => {
   }
   const handlePost = ()=>{
     try{
-       if(mode == "edit"){
+       if(String(mode) === "edit"){
             let content = [];
             for(let i=0; i<listInput.length; i++){
               if(listInput[i].content){
@@ -289,9 +289,9 @@ const Post = () => {
               Title:title,
               Content:content,
               ListImg:listFileCreatePost,
-              HotelRecommend: (hotelRecommend.trim() != "") ? (String(hotelRecommend).split(",")) : [],
-              CityRecommend:(cityRecommend.trim() != "") ? (String(cityRecommend).split(",")) : [], 
-              SiteRecommend:(siteRecommend.trim() != "") ? (String(siteRecommend).split(",")) : [], 
+              HotelRecommend: (String(hotelRecommend).trim() !== "") ? (String(hotelRecommend).split(",")) : [],
+              CityRecommend:(String(cityRecommend).trim() !== "") ? (String(cityRecommend).split(",")) : [], 
+              SiteRecommend:(String(siteRecommend).trim() !== "") ? (String(siteRecommend).split(",")) : [], 
               EmotionAuthor:emotionAuthor,
               PermissionSeen:rawSeen,
               ListPeopleTag:listUserChooseTag
@@ -301,7 +301,7 @@ const Post = () => {
             axios.post(`${url()}/posts/EditPost`,post).catch((e)=>{
               console.log(e);
             })
-            console.log("Dữ liệu edit đẩy lên",post);
+            // console.log("Dữ liệu edit đẩy lên",post);
             // update State 
             const newState = listPost.map(ele => {
               if (String(ele._id) === String(idChooseEdit)) {
@@ -309,9 +309,9 @@ const Post = () => {
                           Title:title,
                           Content:content,
                           ListImg:listFileCreatePost,
-                          HotelRecommend: (hotelRecommend.trim() != "") ? (String(hotelRecommend).split(",")) : [],
-                          CityRecommend:(cityRecommend.trim() != "") ? (String(cityRecommend).split(",")) : [], 
-                          SiteRecommend:(siteRecommend.trim() != "") ? (String(siteRecommend).split(",")) : [],
+                          HotelRecommend: (String(hotelRecommend).trim() !== "") ? (String(hotelRecommend).split(",")) : [],
+                          CityRecommend:(String(cityRecommend).trim() !== "") ? (String(cityRecommend).split(",")) : [], 
+                          SiteRecommend:(String(siteRecommend).trim() !== "") ? (String(siteRecommend).split(",")) : [],
                         };
               }
               return ele;
@@ -344,14 +344,14 @@ const Post = () => {
               Title:title,
               Content:content,
               ListImg:listFileCreatePost,
-              HotelRecommend: (hotelRecommend.trim() != "") ? (String(hotelRecommend).split(",")) : [],
-              CityRecommend:(cityRecommend.trim() != "") ? (String(cityRecommend).split(",")) : [], 
-              SiteRecommend:(siteRecommend.trim() != "") ? (String(siteRecommend).split(",")) : [], 
+              HotelRecommend: (String(hotelRecommend).trim() !== "") ? (String(hotelRecommend).split(",")) : [],
+              CityRecommend:(String(cityRecommend).trim() !== "") ? (String(cityRecommend).split(",")) : [], 
+              SiteRecommend:(String(siteRecommend).trim() !== "") ? (String(siteRecommend).split(",")) : [], 
               EmotionAuthor:emotionAuthor,
               PermissionSeen:rawSeen,
               ListPeopleTag:listUserChooseTag
             }
-            console.log("Dữ liệu bài post",post);
+            // console.log("Dữ liệu bài post",post);
             axios.post(`${url()}/posts/CreatePost`,post).then((response)=>{
               if(response && response.data && response.data.data){
                 setListPost((current)=>[response.data.data,...current])
@@ -398,7 +398,7 @@ const Post = () => {
         }
         accceptedFiles.forEach(pic => {
           let type = String(pic.path).split(".")[String(pic.path).split(".").length-1].toLowerCase();
-          if(listType.find((e)=> e == type)){
+          if(listType.find((e)=> String(e) === type)){
             formData.append("files",pic);
           }
         });
@@ -460,7 +460,7 @@ const Post = () => {
         }).catch((e)=>{console.log(e)})
     },500)
     return () => clearTimeout(delayDebounceFn)
-  }, [findWordUserTag]);
+  }, [findWordUserTag,user._id]);
   
   const BrokenImageHotel ="https://api-booking-app-aws-ec2.onrender.com/default.png";
   const imageOnErrorHotel = (event) => {
@@ -468,8 +468,8 @@ const Post = () => {
   };
   const handleChooseUserTag = (obj)=>{
     try{
-      if(mode == "edit"){
-        if(obj && obj.userId && (obj.userId != user._id) && (!listUserChooseTag.find((e)=> e.userId == obj.userId)) ){
+      if(String(mode) === "edit"){
+        if(obj && obj.userId && ( String(obj.userId) !== String(user._id)) && (!listUserChooseTag.find((e)=> String(e.userId) === String(obj.userId))) ){
                 setListUserChooseTag(current => [...current,obj]);
                 axios.post(`${url()}/posts/TagUser`,{
                    PostId:idChooseEdit,
@@ -488,7 +488,7 @@ const Post = () => {
         }
       }
       else{
-        if(obj && obj.userId && (obj.userId != user._id) && (!listUserChooseTag.find((e)=> e.userId == obj.userId)) ){
+        if(obj && obj.userId && (String(obj.userId) !== user._id) && (!listUserChooseTag.find((e)=> String(e.userId) === String(obj.userId))) ){
                 setListUserChooseTag(current => [...current,obj])
         }
       }
@@ -499,22 +499,22 @@ const Post = () => {
   }
   const handleDeleteChooseUserTag = (obj)=>{
       try{
-        if(mode == "edit"){
-          setListUserChooseTag(listUserChooseTag.filter((e)=> e.userId != obj.userId));
+        if(String(mode) === "edit"){
+          setListUserChooseTag(listUserChooseTag.filter((e)=> String(e.userId) !== String(obj.userId)));
           axios.post(`${url()}/posts/UnTagUser`,{
             PostId:idChooseEdit,
             userId:obj.userId,
           }).catch((e)=>{console.log(e)});
           const newState = listPost.map(ele => {
             if (String(ele._id) === String(idChooseEdit)) {
-              return { ...ele, ListPeopleTag:ele.ListPeopleTag.filter((e)=> e.userId != obj.userId)};
+              return { ...ele, ListPeopleTag:ele.ListPeopleTag.filter((e)=> String(e.userId) !== String(obj.userId))};
             }
             return ele;
           });
           setListPost(newState);
         }
         else{
-          setListUserChooseTag(listUserChooseTag.filter((e)=> e.userId != obj.userId))
+          setListUserChooseTag(listUserChooseTag.filter((e)=> String(e.userId) !== String(obj.userId)))
         }
       }
       catch(e){
@@ -524,24 +524,23 @@ const Post = () => {
 
   const handleCancelUpload = (obj)=>{
     try{
-      if(mode == "edit"){
-        setListFileCreatePost(listFileCreatePost.filter((e)=> e != obj));
+      if(String(mode) === "edit"){
+        setListFileCreatePost(listFileCreatePost.filter((e)=> String(e) !== String(obj)));
         axios.post(`${url()}/hotels/DeleteFile`,{ImgLink:obj}).catch((e)=>{console.log(e)});
 
         const newState = listPost.map(ele => {
           if (String(ele._id) === String(idChooseEdit)) {
             return { ...ele, 
-                     ListImg:ele.ListImg.filter((e)=> e != obj)};
+                     ListImg:ele.ListImg.filter((e)=> String(e) !== String(obj))};
           }
           return ele;
         });
         setListPost(newState);
-        
         axios.post(`${url()}/posts/DeleteFilePost`,{PostId:idChooseEdit,ImgLink:obj}).catch((e)=>{console.log(e)})
       }
       else{
-        setListFileCreatePost(listFileCreatePost.filter((e)=> e != obj));
-        axios.post(`${url()}/hotels/DeleteFile`,{ImgLink:obj}).catch((e)=>{console.log(e)})
+        setListFileCreatePost(listFileCreatePost.filter((e)=> String(e) !== String(obj)));
+        axios.post(`${url()}/hotels/DeleteFile`,{ImgLink:obj}).catch((e)=>{console.log(e)});
       }
     }
     catch(e){
@@ -582,7 +581,7 @@ const Post = () => {
        }
 
        if(stopLoadPostCityNameOrder){
-           console.log("Dừng luồng tên thành phố")
+          //  console.log("Dừng luồng tên thành phố")
        }
        else{
               // load by cityName 
@@ -605,7 +604,7 @@ const Post = () => {
        
       //  console.log(stopLoadPostRandomPostBan);
        if(stopLoadPostRandomPostBan){
-           console.log("Dừng luồng random")
+          //  console.log("Dừng luồng random")
        }
        else{
             let response = await axios.post(`${url()}/posts/GetListPostRanDomListPostBaned/HistoryOrder`,{
@@ -773,7 +772,7 @@ const Post = () => {
                                   </div>
                               </div>
                               {
-                                (mode!="edit") && (
+                                (String(mode) !== "edit") && (
                                   <div 
                                       onClick = {()=>setOpenUserTagForm(true)}
                                       className="tag_people_btn">
@@ -785,7 +784,7 @@ const Post = () => {
                                 )
                               }
                               {
-                                (mode!="edit") && (
+                                (String(mode) !== "edit") && (
                                   <div onClick={()=>setOpenRawSeen(true)}
                                   className="permission_seen_btn">
                                   <RawOnIcon/>
@@ -796,7 +795,7 @@ const Post = () => {
                                 )
                               }
                               {
-                                (mode!="edit") && (
+                                (String(mode) !== "edit") && (
                                   <div 
                                       onClick = {()=>setOpenEmotionAuthorForm(true)}
                                       className="emotion_author_btn">
@@ -814,7 +813,7 @@ const Post = () => {
                                   className="Post_btn">
                                     <div className="text">
                                           {
-                                            (mode == "edit") ? (
+                                            (String(mode) === "edit") ? (
                                               <>Edit</>
                                             ):(
                                               <>Post</>
@@ -959,7 +958,7 @@ const Post = () => {
               <div 
                   onClick= {()=>{
                                   
-                                  if(mode == "edit"){
+                                  if(String(mode) === "edit"){
                                     setListUserTag([]);
                                     // handleOutCreatePost();
                                     if(openUserTagForm){

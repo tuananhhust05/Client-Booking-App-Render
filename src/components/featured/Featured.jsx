@@ -88,7 +88,7 @@ const Featured = () => {
         setOpenListHotelInCity(true);
         setOpenShowMore(false);
         axios.post(`${url()}/hotels/TakeListHotelInCity`,{city}).then((response)=>{
-          console.log(response);
+          // console.log(response);
           if(response && response.data && response.data.data){
             setListHotelInCity(response.data.data);
           }

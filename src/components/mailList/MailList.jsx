@@ -2,7 +2,7 @@ import "./mailList.css"
 import { useContext} from "react";
 import axios from 'axios'
 import {useSelector,useDispatch} from 'react-redux'
-import{SearchDataSelector} from '../../redux/selector' // mỗi lần dịch là thay đổi folder cha hiện tại 
+import{SearchDataSelector} from '../../redux/selector'
 import { AuthContext } from "../../context/AuthContext";
 import {url} from '../../config.js'
 const MailList = () => {
@@ -83,6 +83,7 @@ const MailList = () => {
        console.log(e)
     }
   }
+
   return (
     <div className="mail">
       <h1 className="mailTitle">Save your time</h1>

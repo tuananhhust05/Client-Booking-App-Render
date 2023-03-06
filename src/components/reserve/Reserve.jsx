@@ -12,7 +12,7 @@ import {url} from '../../config.js'
 const Reserve = ({ setOpen, hotelId }) => {
   const [selectedRooms, setSelectedRooms] = useState([]);
   const { data} = useFetch(`${url()}/hotels/room/${hotelId}`); // dữ liệu về các phòng cửa 1 khách sạn 
-  console.log(data);
+  // console.log(data);
   const { date } = useSelector(SearchDataSelector); // lấy dữ liệu từ context 
   
   // trả ra 1 mảng gồm các ngày đơn lẻ từ ngày bắt đầu đến ngày kết thúc dựa vào dữ liệu mà user chọn

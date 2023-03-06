@@ -118,7 +118,7 @@ const Hotel = () => {
             axios.get(`${url()}/votes/TakeListInforUserVote/${id}`).then((res)=>{
               if(res.data && res.data.data && res.data.data.length){
                 setListUserVote(res.data.data);
-                setMyVote(res.data.data.find((e)=> e.userId == user._id).Vote || 5);
+                setMyVote(res.data.data.find((e)=> String(e.userId) === String(user._id)).Vote || 5);
               }
             }).catch((err) => { console.log(err); });
 
@@ -135,19 +135,19 @@ const Hotel = () => {
             }).catch((e)=>{console.log(e)})
           }
           socket.on("comment",(comment,type)=>{
-            if( (String(location.pathname.split("/")[1]) === "hotels") && (type == "hotels") ){
+            if( (String(location.pathname.split("/")[1]) === "hotels") && (String(type) === "hotels") ){
                if(comment && comment._id && (!comment.roomId) && (!comment.userIdHostPage) 
-                  && comment.hotelId && (comment.hotelId == id)){
+                  && comment.hotelId && ( String(comment.hotelId) === id)){
                       setListComment(current => [comment,...current]);
                }
             }
           })
           socket.on("editcomment",(comment,type)=>{
-            if( (String(location.pathname.split("/")[1]) === "hotels") && (type == "hotels") ){
+            if( (String(location.pathname.split("/")[1]) === "hotels") && (String(type) === "hotels") ){
                if(comment && comment._id && (!comment.roomId) && (!comment.userIdHostPage) 
-                  && comment.hotelId && (comment.hotelId == id)){
+                  && comment.hotelId && (String(comment.hotelId) === id)){
                     setListComment(current => current.map(
-                      (element, i) => element._id == comment._id ? comment
+                      (element, i) => String(element._id) === comment._id ? comment
                                               : element
                     ));
                 
@@ -155,7 +155,7 @@ const Hotel = () => {
             }
           })
           socket.on("deletecomment",(commentId,type)=>{
-            if( (String(location.pathname.split("/")[1]) === "hotels") && (type == "hotels") ){
+            if( (String(location.pathname.split("/")[1]) === "hotels") && (String(type) === "hotels") ){
               setListComment((current) =>
                  current.filter((e) => String(e._id) !== String(commentId))
               );
@@ -169,7 +169,7 @@ const Hotel = () => {
       navigate("/");
       console.log(e);
     }
-  },[])
+  },[id,location.pathname,navigate,socket,user._id])
 
   const EditCommentListState = (idCommentEdit,CommentEdited) => {
     const newState = listComment.map(obj => {
@@ -199,23 +199,23 @@ const Hotel = () => {
   };
   
   // nếu đã đăng nhập mới cho mở form book 
-  const handleClick = () => {
-    if (user) {
-      setOpenModal(true);
-    } else {
-      navigate("/login");
-    }
-  };
+  // const handleClick = () => {
+  //   if (user) {
+  //     setOpenModal(true);
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
 
   const handleOpenChat = async (userId)=>{
     try{
       setOpenOptionChatWithHost(false);
-      if(user._id != userId){
+      if(String(user._id) !== String(userId)){
           dispatchredux({type: "OPENCLOSECHAT", payload: { status:true }});
           axios.post(`${url()}/conversations/getListConvByUserId`,{userId:user._id}).then((res)=>{
             if(res && res.data && res.data.data){
               dispatchredux({type: "LISTCONV", payload: { listConv:res.data.data }});
-              dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> e.unReader == 1).length }});
+              dispatchredux({type: "COUNTCONVERSATIONUNREADER", payload: { count:res.data.data.filter((e)=> Number(e.unReader) === 1).length }});
             }
           }).catch((e)=>{
             console.log(e)
@@ -227,8 +227,8 @@ const Hotel = () => {
           });
           
           if(response && response.data && response.data.data){
-              if(Data.listConv.find((e)=>e._id == response.data.data._id)){
-                  dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=>e._id == response.data.data._id) }});
+              if(Data.listConv.find((e)=> String(e._id) === String(response.data.data._id))){
+                  dispatchredux({type: "CHOOSECONV", payload: { conversationChosen:Data.listConv.find((e)=> String(e._id) === String(response.data.data._id)) }});
                   dispatchredux({type: "CHANGECHATMODE", payload: { chatMode:true }});
                   axios.post(`${url()}/conversations/LoadMessage`,{
                     conversationId:response.data.data._id,
@@ -246,7 +246,7 @@ const Hotel = () => {
                   });
               }
               else{
-                  dataConv.memberList = [response.data.data.memberList.find((e)=>e.memberId != user._id)];
+                  dataConv.memberList = [response.data.data.memberList.find((e)=> String(e.memberId) !== String(user._id))];
                   dataConv.messageList = response.data.data.messageList;
                   dataConv.timeLastMessage= response.data.data.messageList[0].createAt;
                   dataConv.unReader =0;
@@ -296,7 +296,7 @@ const Hotel = () => {
               EditCommentListState(commentEdit,res.data.data);
               setCommentReply("");
               setCommentReplyMode("");
-              socket.emit("editcomment",listUserCare.filter((e)=> e!= user._id),res.data.data,"hotels");
+              socket.emit("editcomment",listUserCare.filter((e)=> String(e)!== String(user._id)),res.data.data,"hotels");
             }
           }
       }
@@ -345,7 +345,7 @@ const Hotel = () => {
          setListComment((current) =>
             current.filter((e) => String(e._id) !== String(res.data.data))
          );
-         socket.emit("deletecomment",listUserCare.filter((e)=> e!= user._id),res.data.data,"hotels");
+         socket.emit("deletecomment",listUserCare.filter((e)=> String(e) !== String(user._id)),res.data.data,"hotels");
         }
       }
     }
@@ -379,7 +379,7 @@ const Hotel = () => {
       const res2 = await axios.get(`${url()}/votes/TakeListInforUserVote/${id}`); 
       if(res2.data && res2.data.data && res2.data.data.length){
         setListUserVote(res2.data.data);
-        setMyVote(res2.data.data.find((e)=> e.userId == user._id).Vote || 5);
+        setMyVote(res2.data.data.find((e)=> String(e.userId) === String(user._id)).Vote || 5);
       }
     }
   }
@@ -511,7 +511,7 @@ const Hotel = () => {
                         }
                         <Link className="host_infor" style={{textDecoration:"none",color:"black"}} 
                               to={`/users/${dataHost._id}`}>
-                            <img src={dataHost.img}  onError ={imageOnErrorHotel}/>
+                            <img src={dataHost.img}  onError ={imageOnErrorHotel} alt=""/>
                             <p>{dataHost.username}</p>
                         </Link>
                       </div>
@@ -528,7 +528,7 @@ const Hotel = () => {
                 <button onClick={()=>setOpenListService(true)}>Reserve or Book Now!</button>
               </div>
               <div className="linkLocation">
-                <img src={linkMapImg} onError ={imageOnErrorHotel}/>
+                <img src={linkMapImg} onError ={imageOnErrorHotel} alt=""/>
                 <p style={{display:"flex"}} onClick={()=>OpenMap()} >
                    <MapIcon style={{margin:"10px"}}/>
                    Go to map

@@ -183,7 +183,7 @@ const PostEle = ({dataPost,setOpenUserTagForm,setMode,setListUserChooseTag,
         axios.get(`${url()}/comments/takeListCommentPost/${dataPost._id}`).then((response)=>{
             if(response && response.data && response.data.data){
                 setOpenCommentForm(true);
-                console.log("Danh sách comment nhận đươc",response.data.data)
+                // console.log("Danh sách comment nhận đươc",response.data.data)
                 setListComment(response.data.data);
             }
         }).catch((e)=>{console.log(e)})

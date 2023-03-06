@@ -25,7 +25,7 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import {url} from '../../config.js'
 import {socketCient} from '../../config.js'
-import SendIcon from '@mui/icons-material/Send';
+// import SendIcon from '@mui/icons-material/Send';
 const Header = ({ type }) => {
   let socket = socketCient();
   const { user } = useContext(AuthContext);

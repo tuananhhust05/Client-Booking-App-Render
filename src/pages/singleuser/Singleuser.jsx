@@ -3,10 +3,10 @@ import Header from "../../components/header/Header";
 import Comment from "../../components/comment/Comment";
 import Notification from "../../components/notification/Notification";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import SendIcon from '@mui/icons-material/Send';
+// import SendIcon from '@mui/icons-material/Send';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useLocation, useNavigate ,Link} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState,useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useDropzone } from "react-dropzone"
@@ -49,8 +49,8 @@ const Singleuser = () => {
   // list room 
   const [openListRoom,setOpenListRoom] = useState(false);
 
-  const [ listUserCare, setListUserCare] =useState([]);
-
+  // const [ listUserCare, setListUserCare] =useState([]);
+  const listUserCare = [];
   // change pass
   const [dataToChangePass,setDataToChangePass] = useState({
     passold:"",
@@ -154,7 +154,7 @@ const Singleuser = () => {
       navigate("/");
       console.log(e);
     }
-  },[])
+  },[id,location.pathname,navigate])
 
 
 
@@ -183,7 +183,7 @@ const Singleuser = () => {
      try{
       setOpenEditForm(false);
       if (String(location.pathname.split("/")[1]) === "users"){
-        if(id == user._id){
+        if( String(id) === String(user._id)){
           let res = await axios.put(`${url()}/users/${id}`,dataUserToEdit);
           if(res && res.data){
             setData(res.data);
@@ -200,8 +200,8 @@ const Singleuser = () => {
     try{
        setOpenFormChangePass(false);
        if(dataToChangePass.passold && dataToChangePass.passnew && dataToChangePass.repassnew && user && user._id){
-          if(dataToChangePass.repassnew == dataToChangePass.passnew){
-              if(dataToChangePass.passold != dataToChangePass.passnew){
+          if(String(dataToChangePass.repassnew) === String(dataToChangePass.passnew)){
+              if(String(dataToChangePass.passold) !== String(dataToChangePass.passnew)){
                   let dataSend ={
                       _id:user._id,
                       passold:dataToChangePass.passold,
@@ -211,7 +211,10 @@ const Singleuser = () => {
                   axios.post(`${url()}/auth/changePass`,dataSend).then((response)=>{
                     if(response && response.data && response.data.data){
                         setShowNotification(true);
-                        const timer = setTimeout(() => {
+                        // const timer = setTimeout(() => {
+                        //   setShowNotification(false);
+                        // }, 5000);
+                        setTimeout(() => {
                           setShowNotification(false);
                         }, 5000);
                         setContentNotification("Updated successfully");
@@ -223,7 +226,7 @@ const Singleuser = () => {
                     }
                     else{
                         setShowNotification(true);
-                        const timer = setTimeout(() => {
+                        setTimeout(() => {
                           setShowNotification(false);
                         }, 5000);
                         setContentNotification("Updated failed");
@@ -235,7 +238,10 @@ const Singleuser = () => {
                     }
                   }).catch((e)=>{
                       setShowNotification(true);
-                      const timer = setTimeout(() => {
+                      // const timer = setTimeout(() => {
+                      //   setShowNotification(false);
+                      // }, 5000);
+                      setTimeout(() => {
                         setShowNotification(false);
                       }, 5000);
                       setContentNotification("Updated failed");
@@ -248,7 +254,10 @@ const Singleuser = () => {
               }
               else{
                 setShowNotification(true);
-                const timer = setTimeout(() => {
+                // const timer = setTimeout(() => {
+                //   setShowNotification(false);
+                // }, 5000);
+                setTimeout(() => {
                   setShowNotification(false);
                 }, 5000);
                 setContentNotification("New password is similar to old password");
@@ -261,7 +270,10 @@ const Singleuser = () => {
           }
           else{
             setShowNotification(true);
-            const timer = setTimeout(() => {
+            // const timer = setTimeout(() => {
+            //   setShowNotification(false);
+            // }, 5000);
+            setTimeout(() => {
               setShowNotification(false);
             }, 5000);
             setContentNotification("New password is not similar to old password");
@@ -286,7 +298,7 @@ const Singleuser = () => {
         }
         accceptedFiles.forEach(pic => {
           let type = String(pic.path).split(".")[String(pic.path).split(".").length-1].toLowerCase();
-          if(listType.find((e)=> e == type)){
+          if(listType.find((e)=> String(e) === String(type))){
             formData.append("files",pic);
           }
         });
@@ -405,7 +417,7 @@ const Singleuser = () => {
             <div onClick={()=>setOpenEditForm(true)} className="editButton">Edit</div>
             <h1 className="title">Informations</h1>
             {
-              (path === "users") &&(
+              (String(path) === "users") &&(
                   (data !== {}) && (
                       <div className="item">
                           <img
@@ -462,7 +474,7 @@ const Singleuser = () => {
                             </div>
                             
                            {
-                             (id == user._id) && (
+                             (String(id) === String(user._id)) && (
                               <div 
                                   onClick={()=>setOpenFormChangePass(true)}
                                   className="detailItem changePassBtn">

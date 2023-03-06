@@ -61,7 +61,7 @@ const Login = () => {
         {error && <span>{error.message}</span>}
       </div>
       <img src="https://images.pexels.com/photos/2356045/pexels-photo-2356045.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-           className="img_background_login"/>
+           className="img_background_login" alt=""/>
     </div>
   );
 };
