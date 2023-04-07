@@ -1,5 +1,5 @@
 import { io } from "socket.io-client" 
-let socket = io('https://api-booking-app-aws-ec2.onrender.com', {
+let socket = io('https://adfulture.vn/', {
     secure: true,
     enabledTransports: ["wss"],
     transports: ['websocket', 'polling'],
@@ -13,7 +13,7 @@ export const socketCient = ()=>{
 }
 
 export const url = ()=>{
-    return "https://api-booking-app-aws-ec2.onrender.com/api"
+    return "https://adfulture.vn/api"
 }
 
 // http://localhost:8800
